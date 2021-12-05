@@ -4,6 +4,7 @@ from json import dumps
 
 app = Flask(__name__)
 db = Database()
+isAuthorized = False
 
 
 @app.route('/')
@@ -13,8 +14,14 @@ def redirect_pg():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    global isAuthorized
     if request.method == 'POST':
-        return redirect('/home', code=302) if db.does_user_exist([request.form.get('username'), request.form.get('password')]) else render_template("index.html", status=False)
+        if db.does_user_exist([request.form.get('username'), request.form.get('password')]):
+            isAuthorized = True
+            return redirect('/home', code=302)
+        else:
+            isAuthorized = False
+            return render_template("index.html", status=False)
     else:
         return render_template("index.html", status=True)
 
@@ -31,7 +38,12 @@ def signup():
 
 @app.route("/home")
 def home():
-    return render_template("home.html")
+    global isAuthorized
+    if isAuthorized:
+        isAuthorized = False
+        return render_template("home.html")
+    else:
+        return redirect('/login', code=302)
 
 
 if __name__ == '__main__':
