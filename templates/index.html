@@ -1,0 +1,46 @@
+{% extends 'header.html' %}
+
+{% block title %} Sign in {% endblock %}
+
+{% block content %}
+
+<div class="wrap-login100 p-l-55 p-r-55 p-t-80 p-b-30">
+	<form class="login100-form validate-form" action="/login" method="post">
+		<span class="login100-form-title p-b-37">
+			{% if not status %}
+			<p style="color: red;">Invalid username or password!</p>
+			{% endif %}
+			Sign In
+		</span>
+
+		<div class="wrap-input100 validate-input m-b-20" data-validate="Enter username or email">
+			<input class="input100" type="text" name="username" placeholder="username" autocomplete="off" required>
+			<span class="focus-input100"></span>
+		</div>
+
+		<div class="wrap-input100 validate-input m-b-25" data-validate="Enter password">
+			<input class="input100" type="password" name="password" placeholder="password" autocomplete="off" required>
+			<span class="focus-input100"></span>
+		</div>
+
+		<div class="container-login100-form-btn">
+			<button class="login100-form-btn">
+				Sign In
+			</button>
+		</div>
+
+		<div class="text-center" style="margin-top: 30px;">
+			<a href="/signup" class="txt2 hov1">
+				Sign Up
+			</a>
+		</div>
+	</form>
+
+
+</div>
+
+
+
+<div id="dropDownSelect1"></div>
+
+{% endblock %}
