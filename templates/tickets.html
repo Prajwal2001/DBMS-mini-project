@@ -1,6 +1,6 @@
 {% extends 'header.html' %}
 
-{% block title %} home {% endblock %}
+{% block title %} Tickets {% endblock %}
 {% block link %}
 <link rel="stylesheet" href="{{ url_for('static', filename= 'bootswatch/bootstrap.min.css') }}">
 {% endblock %}
@@ -17,8 +17,7 @@
             aria-controls="offcanvasNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel"
-            style="background-color: #d428b5;">
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Navigations</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
@@ -57,29 +56,84 @@
 <!-- Body -->
 
 <div class="container container-scrollable">
-
-    <div class="row">
-        <div class="col-lg-6" id="book-tickets">
-            <a href="/home/{{ user }}/booktickets">
-                <div class="card bg-dark text-white">
-                    <img src="{{ url_for('static', filename='./images/book-tickets.jpg') }}" class="card-img" alt="...">
-                    <div class="card-img-overlay">
-                        <h3 class="card-title">Book ticket </h3>
-                    </div>
-                </div>
-            </a>
+    {% if tickets %}
+    {% for ticket in tickets %}
+    <div class="card text-center">
+        <div class="card-header row">
+            <div class="col-md-4">
+                <h3>{{ ticket.from_station }}</h3>
+            </div>
+            <div class="col-md-4">
+                <h2><i class="fas fa-arrow-right"></i></h2>
+                <h2><i class="fas fa-arrow-down"></i></h2>
+            </div>
+            <div class="col-md-4">
+                <h3>{{ ticket.to_station }}</h3>
+            </div>
         </div>
-        <div class="col-lg-6" id="view-tickets">
-            <a href="/home/{{ user }}/viewtickets">
-                <div class="card bg-dark text-white">
-                    <img src="{{ url_for('static', filename='./images/view_tickets.jpg') }}" class="card-img" alt="...">
-                    <div class="card-img-overlay">
-                        <h3 class="card-title">View Tickets</h3>
-                    </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>PNR: {{ ticket.pnr }}</h5>
                 </div>
-            </a>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Train No: {{ ticket.train_no }}</h5>
+                </div>
+                <div class="col-md-6">
+                    <h5>Train Name: {{ ticket.train_name }}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>Arrival Time: {{ ticket.arrival_time }}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Departure Time: {{ ticket.depart_time }}</h5>
+                </div>
+                <div class="col-md-6">
+                    <h5>Departure Date: {{ ticket.travelling_date }}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Reaching Time: {{ ticket.reaching_time }}</h5>
+                </div>
+                <div class="col-md-6">
+                    <h5>Reaching Date: {{ ticket.reaching_date }}</h5>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Passenger Name</th>
+                        <th>Passenger Age</th>
+                        <th>Seat No</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for passenger in ticket.passengers %}
+                    <tr>
+                        <td>{{ passenger[0] }}</td>
+                        <td>{{ passenger[1] }}</td>
+                        <td>{{ passenger[2] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-muted">
+            <h5>Booking Date: {{ ticket.booking_date }}</h5>
         </div>
     </div>
+    {% endfor %}
+    {% else %}
+    <h1 class="text-center">No tickets found!</h1>
+    {% endif %}
+
 </div>
 {% endblock %}
 {% block scripts %}
