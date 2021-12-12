@@ -1,6 +1,7 @@
 Field,Type,Null,Key,Default,Extra
-p_id,int,NO,PRI,NULL,auto_increment
-p_name,varchar(25),NO,,NULL,
-p_age,int,NO,,NULL,
-seat_no,int,NO,,NULL,
-pnr,int,NO,MUL,NULL,
+stat_id,int,NO,MUL,NULL,
+train_no,int,NO,MUL,NULL,
+arrival_time,time,NO,,NULL,
+depart_time,time,NO,,NULL,
+days,int,NO,,0,
+seq_no,int,NO,,NULL,

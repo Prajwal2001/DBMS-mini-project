@@ -8,7 +8,7 @@
 .container-scrollable {
     position: relative;
     top: 15px;
-    max-height: 75vh; 
+    height: 75vh; 
     overflow-y: auto; 
     width: 90%;
 }
@@ -49,9 +49,19 @@
     display: none;
 }
 
+#book-tickets {
+    background-color: rgba(0,0,255,0.7);
+    padding: 30px;
+    border-radius: 20px;
+}
+
+.button-submit {
+    margin-top: 10px;
+}
+
 @media screen and (max-width: 991px) {
     .container-scrollable {
-        height: 90vh;
+        height: 80vh;
     }
     .card.bg-dark.text-white {
         margin-top: 25px;
@@ -60,10 +70,14 @@
 }
 
 @media screen and (max-width: 767px) {
+    .navbar {
+        margin-bottom: 10px;
+    }
     .fa-arrow-right {
         display: none;
     }
     .fa-arrow-down {
         display: inline;
     }
+
 }

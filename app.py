@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.secret_key = "dbmsminiproject"
 
 db = Database()
-isAuthorized = False
+ticket_details = {}
 
 
 @app.route('/')
@@ -16,6 +16,7 @@ def redirect_pg():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    session["user_id"] = None
     if request.method == 'POST':
         if db.does_user_exist([request.form.get('username'), request.form.get('password')]):
             session["user_id"] = db.get_user_id_by_user_name(
@@ -52,6 +53,22 @@ def viewtickets():
         return render_template("tickets.html", tickets=db.get_tickets(session['user_id']))
     else:
         return redirect('/login')
+
+
+@app.route("/home/booktickets", methods=["GET", "POST"])
+def booktickets():
+    global ticket_details
+    if session['user_id']:
+        if request.method == 'POST':
+            source = request.form.get('source')
+            destination = request.form.get('destination')
+            travel_date = request.form.get('travel_date')
+            ticket_details['source'] = source
+            ticket_details['destination'] = destination
+            ticket_details['travel_date'] = travel_date
+            return "Add passengers"
+        return render_template("booktickets.html", stations=db.get_stations())
+    return redirect('/login')
 
 
 @app.route("/signout")

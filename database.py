@@ -54,7 +54,6 @@ class Database:
             f"select * from users where user_name = '{user_name}'")
         res = self.__cursor.fetchall()
         if res:
-            # print(res)
             return res[0][0]
         return None
 
@@ -120,3 +119,13 @@ class Database:
             )
 
         return tickets_list
+
+    def get_stations(self):
+        self.__cursor.execute("SELECT stat_name FROM stations")
+        return [station[0] for station in self.__cursor.fetchall()]
+
+    def get_trains(self, source_name, destination_name):
+        self.__cursor.execute(
+            f"SELECT stat_id FROM stations WHERE stat_name = '{source_name}' OR stat_name = '{destination_name}';")
+        source, destination = self.__cursor.fetchall()[0]
+        print("\n\n", source, destination, '\n\n')
