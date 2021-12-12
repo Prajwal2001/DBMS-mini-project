@@ -1,0 +1,8 @@
+Field,Type,Null,Key,Default,Extra
+pnr,int,NO,PRI,NULL,auto_increment
+from_station,int,NO,,NULL,
+to_station,int,NO,,NULL,
+booking_date,date,NO,,NULL,
+travel_date,date,NO,,NULL,
+user_id,int,NO,MUL,NULL,
+train_no,int,NO,MUL,NULL,

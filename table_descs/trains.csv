@@ -1,0 +1,3 @@
+Field,Type,Null,Key,Default,Extra
+train_no,int,NO,PRI,NULL,auto_increment
+train_name,varchar(25),NO,,NULL,

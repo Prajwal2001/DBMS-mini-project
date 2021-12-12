@@ -1,0 +1,6 @@
+Field,Type,Null,Key,Default,Extra
+p_id,int,NO,PRI,NULL,auto_increment
+p_name,varchar(25),NO,,NULL,
+p_age,int,NO,,NULL,
+seat_no,int,NO,,NULL,
+pnr,int,NO,MUL,NULL,

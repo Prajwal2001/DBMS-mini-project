@@ -49,7 +49,7 @@ def home():
 @app.route("/home/viewtickets")
 def viewtickets():
     if session['user_id']:
-        return render_template("tickets.html", tickets=db.get_ticket(session['user_id']))
+        return render_template("tickets.html", tickets=db.get_tickets(session['user_id']))
     else:
         return redirect('/login')
 

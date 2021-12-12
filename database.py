@@ -68,7 +68,7 @@ class Database:
         travelling_date = travelling_date + timedelta(int(days))
         return self.convert_date_format(travelling_date)
 
-    def get_ticket(self, user_id: int):
+    def get_tickets(self, user_id: int):
         """Returns tickets for given user_id"""
 
         self.__cursor.execute(
@@ -77,7 +77,7 @@ class Database:
         for pnr in self.__cursor.fetchall():
 
             self.__cursor.execute(
-                f"""select T.pnr, travelling_date, T.train_no, TR.train_name, A.stat_loc, B.stat_loc, booking_date 
+                f"""select T.pnr, travel_date, T.train_no, TR.train_name, A.stat_loc, B.stat_loc, booking_date 
                 from tickets T join users U on T.user_id = U.user_id join trains TR on T.train_no = TR.train_no, stations A, stations B 
                 where T.pnr = { pnr[0] } and 
                 A.stat_id in (select from_station from tickets where pnr = { pnr[0] }) and 
@@ -95,11 +95,11 @@ class Database:
             passengers = self.__cursor.fetchall()
 
             self.__cursor.execute(
-                f"select arrival_time, depart_time from covers where t_no = {ticket[0][2]} and s_id = (select stat_id from stations where stat_loc = '{ticket[0][4]}')")
+                f"select arrival_time, depart_time from covers where train_no = {ticket[0][2]} and stat_id = (select stat_id from stations where stat_loc = '{ticket[0][4]}')")
             source_timing = self.__cursor.fetchall()
 
             self.__cursor.execute(
-                f"select arrival_time, days from covers where t_no = {ticket[0][2]} and s_id = (select stat_id from stations where stat_loc = '{ticket[0][5]}')")
+                f"select arrival_time, days from covers where train_no = {ticket[0][2]} and stat_id = (select stat_id from stations where stat_loc = '{ticket[0][5]}')")
             destination_timing = self.__cursor.fetchall()
 
             tickets_list.append(
