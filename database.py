@@ -25,7 +25,7 @@ class Database:
 
         try:
             self.__cursor.execute(
-                f"insert into users values(null, '{u_name}', '{hashlib.md5(password.encode()).hexdigest()}', '{email}')")
+                f"insert into users values(null, '{u_name}', '{email}', '{hashlib.md5(password.encode()).hexdigest()}')")
         except mysql.connector.errors.IntegrityError:
             return None
 
@@ -43,15 +43,21 @@ class Database:
         self.__cursor.execute(
             f"""select * 
             from users 
-            where u_name = '{user_id[0]}' and 
+            where user_name = '{user_id[0]}' and 
             password = '{hashlib.md5(user_id[1].encode()).hexdigest()}'""")
-        return bool(self.__cursor.fetchall())
+        res = self.__cursor.fetchall()
+        # print(res)
+        return res
 
     def get_user_id_by_user_name(self, user_name):
         """Returns user_id for given user_name"""
         self.__cursor.execute(
-            f"select * from users where u_name = '{user_name}'")
-        return self.__cursor.fetchall()[0][0]
+            f"select * from users where user_name = '{user_name}'")
+        res = self.__cursor.fetchall()
+        if res:
+            # print(res)
+            return res[0][0]
+        return None
 
     def get_ticket(self, user_id: int):
         """Returns tickets for given user_id"""

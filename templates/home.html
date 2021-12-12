@@ -32,19 +32,17 @@
                                 data-bs-placement="left" title="Go to homepage">Home</button></a>
                     </li>
                     <li class="nav-item text-center">
-                        <a class="nav-link" href="/home/{{ user }}/viewtickets"><button type="button"
-                                class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="left"
-                                title="Go to homepage">View
+                        <a class="nav-link" href="/home/viewtickets"><button type="button" class="btn btn-secondary"
+                                data-bs-toggle="tooltip" data-bs-placement="left" title="Go to homepage">View
                                 Tickets</button></a>
                     </li>
                     <li class="nav-item text-center">
-                        <a class="nav-link" href="/home/{{ user }}/booktickets"><button type="button"
-                                class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="left"
-                                title="Go to homepage">Book
+                        <a class="nav-link" href="/home/booktickets"><button type="button" class="btn btn-secondary"
+                                data-bs-toggle="tooltip" data-bs-placement="left" title="Go to homepage">Book
                                 Tickets</button></a>
                     </li>
                     <li class="nav-item text-center">
-                        <a class="nav-link" href="/"><button type="button" class="btn btn-secondary"
+                        <a class="nav-link" href="/signout"><button type="button" class="btn btn-secondary"
                                 data-bs-toggle="tooltip" data-bs-placement="left" title="Go to homepage">Sign
                                 Out</button></a>
                     </li>
@@ -60,7 +58,7 @@
 
     <div class="row">
         <div class="col-lg-6" id="book-tickets">
-            <a href="/home/{{ user }}/booktickets">
+            <a href="/home/booktickets">
                 <div class="card bg-dark text-white">
                     <img src="{{ url_for('static', filename='./images/book-tickets.jpg') }}" class="card-img" alt="...">
                     <div class="card-img-overlay">
@@ -70,7 +68,7 @@
             </a>
         </div>
         <div class="col-lg-6" id="view-tickets">
-            <a href="/home/{{ user }}/viewtickets">
+            <a href="/home/viewtickets">
                 <div class="card bg-dark text-white">
                     <img src="{{ url_for('static', filename='./images/view_tickets.jpg') }}" class="card-img" alt="...">
                     <div class="card-img-overlay">
