@@ -46,7 +46,6 @@ class Database:
             where user_name = '{user_id[0]}' and 
             password = '{hashlib.md5(user_id[1].encode()).hexdigest()}'""")
         res = self.__cursor.fetchall()
-        # print(res)
         return res
 
     def get_user_id_by_user_name(self, user_name):
@@ -59,17 +58,18 @@ class Database:
             return res[0][0]
         return None
 
+    def convert_date_format(self, date):
+        date = str(date).split('-')
+        return f"{date[-1]}-{date[-2]}-{date[-3]}"
+
+    def calculate_reaching_date(self, days, travelling_date):
+        temp = travelling_date.split('-')
+        travelling_date = date(int(temp[2]), int(temp[1]), int(temp[0]))
+        travelling_date = travelling_date + timedelta(int(days))
+        return self.convert_date_format(travelling_date)
+
     def get_ticket(self, user_id: int):
         """Returns tickets for given user_id"""
-        def convert_date_format(date):
-            date = str(date).split('-')
-            return f"{date[-1]}-{date[-2]}-{date[-3]}"
-
-        def calculate_reaching_date(days, travelling_date):
-            temp = travelling_date.split('-')
-            travelling_date = date(int(temp[2]), int(temp[1]), int(temp[0]))
-            travelling_date = travelling_date + timedelta(int(days))
-            return convert_date_format(travelling_date)
 
         self.__cursor.execute(
             f"select pnr from tickets where user_id = {user_id}")
@@ -105,17 +105,17 @@ class Database:
             tickets_list.append(
                 {
                     "pnr": ticket[0][0],
-                    "travelling_date": convert_date_format(ticket[0][1]),
+                    "travelling_date": self.convert_date_format(ticket[0][1]),
                     "train_no": ticket[0][2],
                     "train_name": ticket[0][3],
                     "from_station": ticket[0][4],
                     "to_station": ticket[0][5],
                     "passengers": [[passenger[1], passenger[2], passenger[3]] for passenger in passengers if passenger[0] == ticket[0][0]],
-                    "booking_date": convert_date_format(ticket[0][6]),
+                    "booking_date": self.convert_date_format(ticket[0][6]),
                     "arrival_time": source_timing[0][0],
                     "depart_time": source_timing[0][1],
                     "reaching_time": destination_timing[0][0],
-                    "reaching_date": calculate_reaching_date(destination_timing[0][1], convert_date_format(ticket[0][1]))
+                    "reaching_date": self.calculate_reaching_date(destination_timing[0][1], self.convert_date_format(ticket[0][1]))
                 }
             )
 

@@ -3,7 +3,7 @@ from database import Database
 from json import dumps
 
 app = Flask(__name__)
-app.secret_key = "abc"
+app.secret_key = "dbmsminiproject"
 
 db = Database()
 isAuthorized = False
@@ -30,11 +30,10 @@ def login():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        print(request.form.get('username'))
         response = db.add_user([request.form.get('username'),
                                 request.form.get('email'),
                                 request.form.get('password')])
-        return redirect('/home', code=302) if response else render_template("signup.html", status=response)
+        return redirect('/login', code=302) if response else render_template("signup.html", status=response)
     else:
         return render_template("signup.html", status=True)
 
