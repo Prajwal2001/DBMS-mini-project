@@ -1,7 +1,8 @@
 import hashlib
 import mysql.connector
 import yaml
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
+from random import randint
 
 
 class Database:
@@ -165,3 +166,35 @@ class Database:
                     "reaching_time": destData[1],
                 })
         return trains_list
+
+    def add_passengers_ticket(self, ticket_details):
+        self.__cursor.execute(f"""
+        SELECT A.stat_id, B.stat_id
+        FROM stations A, stations B
+        WHERE A.stat_name='{ticket_details['source']}' AND
+        B.stat_name='{ticket_details['destination']}'
+        """)
+        stations = self.__cursor.fetchall()
+
+        travel_date_list = str(ticket_details['travel_date']).split('-')
+
+        print(travel_date_list)
+
+        self.__cursor.execute(
+            f"""INSERT INTO tickets VALUES (null, {stations[0][0]}, {stations[0][1]}, '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}', '{travel_date_list[0]}-{travel_date_list[1]}-{travel_date_list[2]}', {ticket_details['user_id']}, {ticket_details['train_no']})""")
+        self.__cursor.execute(f"""
+        SELECT pnr
+        FROM tickets
+        WHERE from_station = '{stations[0][0]}' AND
+            to_station = '{stations[0][1]}' AND
+            booking_date = '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}' AND
+            travel_date = '{travel_date_list[0]}-{travel_date_list[1]}-{travel_date_list[2]}' AND
+            user_id = {ticket_details['user_id']} AND
+            train_no = {ticket_details['train_no']}
+        """)
+        pnr = int(self.__cursor.fetchall()[0][0])
+        seat_no = randint(1, 500)
+        for passenger in ticket_details['passengers']:
+            self.__cursor.execute(
+                f"""INSERT INTO passengers VALUES (null, '{passenger['p_name']}', {passenger['p_age']}, {seat_no}, {pnr})""")
+            seat_no += 1

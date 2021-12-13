@@ -74,7 +74,9 @@ def booktickets():
 @app.route("/home/trains")
 def trains():
     global ticket_details
-    return render_template("trains.html", trains=db.get_trains(ticket_details['source'], ticket_details['destination']))
+    if session['user_id']:
+        return render_template("trains.html", trains=db.get_trains(ticket_details['source'], ticket_details['destination']))
+    return redirect('/login')
 
 
 @app.route("/home/<int:train_no>/addpassengers")
@@ -82,6 +84,7 @@ def get_train_no(train_no):
     global ticket_details
     ticket_details['train_no'] = train_no
     ticket_details['passengers'] = []
+    ticket_details['user_id'] = session['user_id']
     return redirect("/home/addpassengers")
 
 
@@ -100,6 +103,14 @@ def addpassengers():
             pprint(ticket_details)
         return render_template("addpassengers.html")
     return redirect("/login")
+
+
+@app.route("/home/reserveticket")
+def reserveticket():
+    global ticket_details
+    if session['user_id']:
+        db.add_passengers_ticket(ticket_details)
+        return redirect("/home/viewtickets")
 
 
 @app.route("/signout")
