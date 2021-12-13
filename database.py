@@ -125,7 +125,44 @@ class Database:
         return [station[0] for station in self.__cursor.fetchall()]
 
     def get_trains(self, source_name, destination_name):
+        trains_list = []
         self.__cursor.execute(
-            f"SELECT stat_id FROM stations WHERE stat_name = '{source_name}' OR stat_name = '{destination_name}';")
-        source, destination = self.__cursor.fetchall()[0]
+            f"SELECT stat_id FROM stations WHERE stat_name = '{source_name}';")
+        source = self.__cursor.fetchall()[0][0]
+        self.__cursor.execute(
+            f"SELECT stat_id FROM stations WHERE stat_name = '{destination_name}';")
+        destination = self.__cursor.fetchall()[0][0]
         print("\n\n", source, destination, '\n\n')
+        self.__cursor.execute('SELECT train_no FROM trains')
+        train_nos = self.__cursor.fetchall()
+        for train_no in train_nos:
+            self.__cursor.execute(
+                f"""SELECT seq_no, arrival_time 
+                FROM covers 
+                WHERE train_no = {train_no[0]} AND stat_id = {destination};""")
+            destData = self.__cursor.fetchall()
+            if destData:
+                destData = destData[0]
+            destSeqno = destData[0] if destData else None
+            self.__cursor.execute(
+                f"""SELECT seq_no, arrival_time, depart_time 
+                FROM covers 
+                WHERE train_no = {train_no[0]} AND stat_id = {source};""")
+            sourceData = self.__cursor.fetchall()
+            if sourceData:
+                sourceData = sourceData[0]
+            sourceSeqno = sourceData[0] if sourceData else None
+            if sourceSeqno and destSeqno and sourceSeqno < destSeqno:
+                self.__cursor.execute(
+                    f"SELECT train_name FROM trains WHERE train_no = {train_no[0]}")
+                train_name = self.__cursor.fetchall()[0][0]
+                trains_list.append({
+                    "train_no": train_no[0],
+                    "train_name": train_name,
+                    "source": source_name,
+                    "destination": destination_name,
+                    "arrival_time": sourceData[1],
+                    "departure_time": sourceData[2],
+                    "reaching_time": destData[1],
+                })
+        return trains_list
