@@ -49,7 +49,7 @@
     display: none;
 }
 
-#book-tkts {
+#book-tkts, .addpassengers {
     background-color: rgba(0,0,255,0.7);
     padding: 30px;
     border-radius: 20px;
@@ -61,12 +61,8 @@
 
 @media screen and (max-width: 991px) {
     .container-scrollable {
-        height: 80vh;
+        height: 75vh;
     }
-    .card.bg-dark.text-white {
-        margin-top: 25px;
-    }
-    
 }
 
 @media screen and (max-width: 767px) {

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, request, session
 from database import Database
-from json import dumps
+from pprint import pprint
 
 app = Flask(__name__)
 app.secret_key = "dbmsminiproject"
@@ -75,6 +75,31 @@ def booktickets():
 def trains():
     global ticket_details
     return render_template("trains.html", trains=db.get_trains(ticket_details['source'], ticket_details['destination']))
+
+
+@app.route("/home/<int:train_no>/addpassengers")
+def get_train_no(train_no):
+    global ticket_details
+    ticket_details['train_no'] = train_no
+    ticket_details['passengers'] = []
+    return redirect("/home/addpassengers")
+
+
+@app.route('/home/addpassengers', methods=['GET', 'POST'])
+def addpassengers():
+    global ticket_details
+    if session['user_id']:
+        if request.method == 'POST':
+            name = request.form.get('p_name')
+            age = int(request.form.get('p_age'))
+            ticket_details['passengers'].append({
+                'p_name': name,
+                'p_age': age
+            })
+            print("\n\n\n")
+            pprint(ticket_details)
+        return render_template("addpassengers.html")
+    return redirect("/login")
 
 
 @app.route("/signout")

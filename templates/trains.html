@@ -55,7 +55,14 @@
 
 <div class="container-scrollable text-center">
     {% for train in trains %}
-    <h4>{{ train }}</h4>
+    <h4>{{ train.train_no }}</h4>
+    <h4>{{ train.train_name }}</h4>
+    <h4>{{ train.source }}</h4>
+    <h4>{{ train.destination }}</h4>
+    <h4>{{ train.arrival_time }}</h4>
+    <h4>{{ train.departure_time }}</h4>
+    <h4>{{ train.reaching_time }}</h4>
+    <a href="/home/{{ train.train_no }}/addpassengers" class="btn btn-primary">Submit</a>
     {% endfor %}
 </div>
 {% endblock %}

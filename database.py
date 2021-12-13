@@ -132,7 +132,6 @@ class Database:
         self.__cursor.execute(
             f"SELECT stat_id FROM stations WHERE stat_name = '{destination_name}';")
         destination = self.__cursor.fetchall()[0][0]
-        print("\n\n", source, destination, '\n\n')
         self.__cursor.execute('SELECT train_no FROM trains')
         train_nos = self.__cursor.fetchall()
         for train_no in train_nos:
