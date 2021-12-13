@@ -1,6 +1,6 @@
 {% extends 'header.html' %}
 
-{% block title %} Book Tickets {% endblock %}
+{% block title %} Trains {% endblock %}
 {% block link %}
 <link rel="stylesheet" href="{{ url_for('static', filename= 'bootswatch/bootstrap.min.css') }}">
 {% endblock %}
@@ -54,41 +54,9 @@
 <!-- Body -->
 
 <div class="container-scrollable text-center">
-    <form action="/home/booktickets" method="post" id="book-tkts">
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-4">
-                <label for="browser" class="col-form-label">Source:</label>
-                <input list="browsers" name="source" id="browser" class="form-control" required>
-
-                <datalist id="browsers">
-                    {% for station in stations %}
-                    <option value="{{ station }}">
-                        {% endfor %}
-                </datalist>
-            </div>
-            <div class="col-md-4">
-                <label for="browser" class="col-form-label">Destination:</label>
-                <input list="browsers" name="destination" id="browser" class="form-control" required>
-
-                <datalist id="browsers">
-                    {% for station in stations %}
-                    <option value="{{ station }}">
-                        {% endfor %}
-                </datalist>
-            </div>
-            <div class="col-md-2"></div>
-        </div>
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <label for="browser" class="col-form-label" name="travel_date">Travel Date:</label>
-                <input type="date" class="form-control" required>
-            </div>
-            <div class="col-md-4"></div>
-        </div>
-        <button type="submit" class="btn btn-primary button-submit">Submit</button>
-    </form>
+    {% for train in trains %}
+    <h4>{{ train }}</h4>
+    {% endfor %}
 </div>
 {% endblock %}
 {% block scripts %}

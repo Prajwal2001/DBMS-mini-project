@@ -66,9 +66,15 @@ def booktickets():
             ticket_details['source'] = source
             ticket_details['destination'] = destination
             ticket_details['travel_date'] = travel_date
-            return "Add passengers"
+            return redirect("/home/trains")
         return render_template("booktickets.html", stations=db.get_stations())
     return redirect('/login')
+
+
+@app.route("/home/trains")
+def trains():
+    global ticket_details
+    return render_template("trains.html", trains=db.get_trains(ticket_details['source'], ticket_details['destination']))
 
 
 @app.route("/signout")
