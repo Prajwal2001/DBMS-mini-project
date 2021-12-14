@@ -11,7 +11,7 @@ ticket_details = {}
 
 @app.route('/')
 def redirect_pg():
-    return redirect('/login', code=302)
+    return redirect('/login')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -21,7 +21,7 @@ def login():
         if db.does_user_exist([request.form.get('username'), request.form.get('password')]):
             session["user_id"] = db.get_user_id_by_user_name(
                 request.form.get('username'))
-            return redirect('/home', code=302)
+            return redirect('/home')
         else:
             return render_template("index.html", status=False)
     else:
@@ -111,6 +111,12 @@ def reserveticket():
     if session['user_id']:
         db.add_passengers_ticket(ticket_details)
         return redirect("/home/viewtickets")
+
+
+@app.route('/home/cancelticket/<int:pnr>')
+def cancelticket(pnr):
+    db.cancel_ticket(pnr)
+    return redirect('/home/viewtickets')
 
 
 @app.route("/signout")

@@ -6,6 +6,8 @@ from random import randint
 
 
 class Database:
+    """Used to connect Database"""
+
     def __init__(self):
         with open('./credentials.yaml') as f:
             self.__data = yaml.load(f, Loader=yaml.FullLoader)
@@ -26,11 +28,11 @@ class Database:
 
         try:
             self.__cursor.execute(
-                f"insert into users values(null, '{u_name}', '{email}', '{hashlib.md5(password.encode()).hexdigest()}')")
+                f"INSERT iNTO users VALUES (null, '{u_name}', '{email}', '{hashlib.md5(password.encode()).hexdigest()}')")
         except mysql.connector.errors.IntegrityError:
             return None
 
-        self.__cursor.execute(f"select * from users")
+        self.__cursor.execute(f"SELECT * FROM users")
 
         return [{
             "user_id": item[0],
@@ -42,17 +44,20 @@ class Database:
     def does_user_exist(self, user_id: list):
         """Checks if the user_id exists in the database"""
         self.__cursor.execute(
-            f"""select * 
-            from users 
-            where user_name = '{user_id[0]}' and 
+            f"""SELECT * 
+            FROM users 
+            WHERE user_name = '{user_id[0]}' and 
             password = '{hashlib.md5(user_id[1].encode()).hexdigest()}'""")
         res = self.__cursor.fetchall()
         return res
 
     def get_user_id_by_user_name(self, user_name):
         """Returns user_id for given user_name"""
-        self.__cursor.execute(
-            f"select * from users where user_name = '{user_name}'")
+        self.__cursor.execute(f"""
+            SELECT * 
+            FROM users 
+            WHERE user_name = '{user_name}';
+            """)
         res = self.__cursor.fetchall()
         if res:
             return res[0][0]
@@ -72,34 +77,52 @@ class Database:
         """Returns tickets for given user_id"""
 
         self.__cursor.execute(
-            f"select pnr from tickets where user_id = {user_id}")
+            f"""
+            SELECT pnr 
+            FROM tickets 
+            WHERE user_id = {user_id}
+            """)
         tickets_list = []
         for pnr in self.__cursor.fetchall():
 
             self.__cursor.execute(
-                f"""select T.pnr, travel_date, T.train_no, TR.train_name, A.stat_loc, B.stat_loc, booking_date 
-                from tickets T join users U on T.user_id = U.user_id join trains TR on T.train_no = TR.train_no, stations A, stations B 
-                where T.pnr = { pnr[0] } and 
-                A.stat_id in (select from_station from tickets where pnr = { pnr[0] }) and 
-                B.stat_id in (select to_station from tickets where pnr = { pnr[0] });"""
+                f"""SELECT T.pnr, travel_date, T.train_no, TR.train_name, A.stat_loc, B.stat_loc, booking_date 
+                FROM tickets T join users U on T.user_id = U.user_id join trains TR on T.train_no = TR.train_no, stations A, stations B 
+                WHERE T.pnr = { pnr[0] } and 
+                    A.stat_id in (SELECT from_station FROM tickets WHERE pnr = { pnr[0] }) and 
+                    B.stat_id in (SELECT to_station FROM tickets WHERE pnr = { pnr[0] })
+                ORDER BY travel_date;"""
             )
             ticket = self.__cursor.fetchall()
 
             self.__cursor.execute(
-                f"""select T.pnr, p_name, p_age, seat_no 
-                from tickets T join users U on T.user_id = U.user_id join trains TR on T.train_no = TR.train_no join passengers P on P.pnr = T.pnr , stations A, stations B 
-                where T.pnr = { pnr[0] } and 
-                A.stat_id in (select from_station from tickets where pnr = { pnr[0] }) and 
-                B.stat_id in (select to_station from tickets where pnr = { pnr[0] });"""
+                f"""SELECT T.pnr, p_name, p_age, seat_no 
+                FROM tickets T join users U on T.user_id = U.user_id join trains TR on T.train_no = TR.train_no join passengers P on P.pnr = T.pnr , stations A, stations B 
+                WHERE T.pnr = { pnr[0] } and 
+                    A.stat_id in (SELECT from_station FROM tickets WHERE pnr = { pnr[0] }) and 
+                    B.stat_id in (SELECT to_station FROM tickets WHERE pnr = { pnr[0] })
+                ORDER BY p_name;"""
             )
             passengers = self.__cursor.fetchall()
 
             self.__cursor.execute(
-                f"select arrival_time, depart_time from covers where train_no = {ticket[0][2]} and stat_id = (select stat_id from stations where stat_loc = '{ticket[0][4]}')")
+                f"""
+                SELECT arrival_time, depart_time 
+                FROM covers 
+                WHERE train_no = {ticket[0][2]} AND 
+                    stat_id = (SELECT stat_id 
+                                FROM stations
+                                WHERE stat_loc = '{ticket[0][4]}')""")
             source_timing = self.__cursor.fetchall()
 
             self.__cursor.execute(
-                f"select arrival_time, days from covers where train_no = {ticket[0][2]} and stat_id = (select stat_id from stations where stat_loc = '{ticket[0][5]}')")
+                f"""
+                SELECT arrival_time, days 
+                FROM covers 
+                WHERE train_no = {ticket[0][2]} AND
+                    stat_id = (SELECT stat_id 
+                                FROM stations 
+                                WHERE stat_loc = '{ticket[0][5]}')""")
             destination_timing = self.__cursor.fetchall()
 
             tickets_list.append(
@@ -128,11 +151,12 @@ class Database:
     def get_trains(self, source_name, destination_name):
         trains_list = []
         self.__cursor.execute(
-            f"SELECT stat_id FROM stations WHERE stat_name = '{source_name}';")
-        source = self.__cursor.fetchall()[0][0]
-        self.__cursor.execute(
-            f"SELECT stat_id FROM stations WHERE stat_name = '{destination_name}';")
-        destination = self.__cursor.fetchall()[0][0]
+            f"""
+            SELECT A.stat_id, B.stat_id 
+            FROM stations A, stations B 
+            WHERE A.stat_name = '{source_name}' AND 
+                B.stat_name = '{destination_name}';""")
+        source, destination = self.__cursor.fetchall()[0]
         self.__cursor.execute('SELECT train_no FROM trains')
         train_nos = self.__cursor.fetchall()
         for train_no in train_nos:
@@ -198,3 +222,6 @@ class Database:
             self.__cursor.execute(
                 f"""INSERT INTO passengers VALUES (null, '{passenger['p_name']}', {passenger['p_age']}, {seat_no}, {pnr})""")
             seat_no += 1
+
+    def cancel_ticket(self, pnr):
+        self.__cursor.execute(f"""DELETE FROM tickets WHERE pnr = {pnr}""")

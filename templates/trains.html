@@ -54,6 +54,8 @@
 <!-- Body -->
 
 <div class="container-scrollable">
+    {% if trains %}
+    <h1>Available Trains:</h1>
     {% for train in trains %}
     <div class="card text-center">
         <div class="card-header row">
@@ -88,6 +90,12 @@
         </div>
     </div>
     {% endfor %}
+    {% else %}
+    <div class="text-center">
+        <h1>No trains available for this route!</h1>
+        <a href="/home/booktickets" class="btn btn-primary">Go Back</a>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
 {% block scripts %}
