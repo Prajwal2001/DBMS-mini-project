@@ -21,10 +21,10 @@ class Database:
 
         self.__cursor = self.__mydb.cursor()
 
-    def add_user(self, user_id: list):
+    def add_user(self, user: list):
         """Adds a user_id to the database, by accepting a list consisting of username, password and email.
         And returns the updated table values in a list of key value pairs"""
-        u_name, email, password = user_id
+        u_name, email, password = user
 
         try:
             self.__cursor.execute(
