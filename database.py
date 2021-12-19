@@ -19,6 +19,7 @@ class Database:
             autocommit=True
         )
         self.__price = 0
+        self.__totalPrice = 0
 
         self.__cursor = self.__mydb.cursor()
 
@@ -196,21 +197,19 @@ class Database:
                 })
         return trains_list
 
-    def add_passengers_ticket(self, ticket_details):
+    def add_passengers_ticket(self, passenger_details):
         self.__cursor.execute(f"""
         SELECT A.stat_id, B.stat_id
         FROM stations A, stations B
-        WHERE A.stat_name='{ticket_details['source']}' AND
-        B.stat_name='{ticket_details['destination']}'
+        WHERE A.stat_name='{passenger_details['source']}' AND
+        B.stat_name='{passenger_details['destination']}'
         """)
         stations = self.__cursor.fetchall()
 
-        travel_date_list = str(ticket_details['travel_date']).split('-')
-
-        print(travel_date_list)
+        travel_date_list = str(passenger_details['travel_date']).split('-')
 
         self.__cursor.execute(
-            f"""INSERT INTO tickets VALUES (null, {stations[0][0]}, {stations[0][1]}, '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}', '{travel_date_list[0]}-{travel_date_list[1]}-{travel_date_list[2]}', {ticket_details['user_id']}, {ticket_details['train_no']}, null)""")
+            f"""INSERT INTO tickets VALUES (null, {stations[0][0]}, {stations[0][1]}, '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}', '{travel_date_list[0]}-{travel_date_list[1]}-{travel_date_list[2]}', {passenger_details['user_id']}, {passenger_details['train_no']}, null)""")
         self.__cursor.execute(f"""
         SELECT pnr
         FROM tickets
@@ -218,18 +217,27 @@ class Database:
             to_station = '{stations[0][1]}' AND
             booking_date = '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}' AND
             travel_date = '{travel_date_list[0]}-{travel_date_list[1]}-{travel_date_list[2]}' AND
-            user_id = {ticket_details['user_id']} AND
-            train_no = {ticket_details['train_no']}
+            user_id = {passenger_details['user_id']} AND
+            train_no = {passenger_details['train_no']}
         """)
         pnr = int(self.__cursor.fetchall()[0][0])
         seat_no = randint(1, 500)
-        totalPrice = 0
-        for passenger in ticket_details['passengers']:
+        self.__totalPrice = 0
+        for passenger in passenger_details['passengers']:
             self.__cursor.execute(
                 f"""INSERT INTO passengers VALUES (null, '{passenger['p_name']}', {passenger['p_age']}, {seat_no}, {pnr})""")
-            totalPrice += self.__price
+            self.__totalPrice += self.__price
+            print("\n\n", self.__totalPrice)
             seat_no += 1
-        self.__cursor.execute(f"""UPDATE tickets SET price={totalPrice}""")
+        self.__cursor.execute(
+            f"""UPDATE tickets SET price={self.__totalPrice}""")
 
     def cancel_ticket(self, pnr):
         self.__cursor.execute(f"""DELETE FROM tickets WHERE pnr = {pnr}""")
+
+    def get_totalprice(self, passenger_details):
+        price = 0
+        for _ in passenger_details['passengers']:
+            price += self.__price
+
+        return price

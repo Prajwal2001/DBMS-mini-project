@@ -54,6 +54,11 @@
 <!-- Body -->
 
 <div class="container-scrollable text-center">
+    <div class="progress" style="height: 5px;">
+        <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0"
+            aria-valuemax="100"></div>
+    </div>
+    <br>
     <form action="/home/addpassengers" method='post' class="addpassengers">
         <div class="row">
             <div class="col-md-6">
@@ -67,7 +72,7 @@
         </div>
         <button class="btn btn-primary" type="submit" style="margin-top:25px;">Add Passenger</button>
     </form>
-    <a href="/home/reserveticket" class="btn btn-primary" style="margin-top: 10px;">Done</a>
+    <a href="/home/payment" class="btn btn-primary" style="margin-top: 10px;">Done</a>
 </div>
 {% endblock %}
 {% block scripts %}

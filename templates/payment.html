@@ -1,0 +1,162 @@
+{% extends 'header.html' %}
+
+{% block title %} Payment {% endblock %}
+{% block link %}
+<link rel="stylesheet" href="{{ url_for('static', filename= 'bootswatch/bootstrap.min.css') }}">
+{% endblock %}
+{% block content %}
+
+<!-- Navbar -->
+
+<nav class="navbar navbar-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('home')}}">
+            <h3><b><i>Railways</i></b></h3>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+            aria-controls="offcanvasNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Navigations</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item text-center">
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}"><button
+                                type="button" class="btn btn-secondary" data-bs-toggle="tooltip"
+                                data-bs-placement="left" title="Go to homepage">Home</button></a>
+                    </li>
+                    <li class="nav-item text-center">
+                        <a class="nav-link" href="/home/viewtickets"><button type="button" class="btn btn-secondary"
+                                data-bs-toggle="tooltip" data-bs-placement="left" title="Go to homepage">View
+                                Tickets</button></a>
+                    </li>
+                    <li class="nav-item text-center">
+                        <a class="nav-link" href="/home/booktickets"><button type="button" class="btn btn-secondary"
+                                data-bs-toggle="tooltip" data-bs-placement="left" title="Go to homepage">Book
+                                Tickets</button></a>
+                    </li>
+                    <li class="nav-item text-center">
+                        <a class="nav-link" href="/signout"><button type="button" class="btn btn-secondary"
+                                data-bs-toggle="tooltip" data-bs-placement="left" title="Go to homepage">Sign
+                                Out</button></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Body -->
+
+<div class="container container-scrollable">
+    <div class="progress" style="height: 5px;">
+        <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0"
+            aria-valuemax="100"></div>
+    </div>
+    <br>
+    <h1 class="text-center">Amount to be paid: ₹{{ amount }}</h1>
+    <h2>Payment Modes: </h2>
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne"
+                    style="color: black;">
+                    Debit/Credit card
+                </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse text-center"
+                aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                <form action="/home/payment" method="post">
+                    <br>
+                    <label for="p_name">Card No: </label>
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <input type="text" name="cardno" class="form-control" placeholder="1234567890"
+                                pattern=".{10}" required>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+                    <label for="p_name">Card holder name: </label>
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <input type="text" name="holdername" class="form-control" placeholder="name"
+                                pattern="[a-zA-z]*\s?[a-zA-z]*?" required>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+                    <label for="p_name">Valid till: </label>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-0"></div>
+                        <div class="col-md-2 col-sm-6">
+                            <input type="text" name="month" class="form-control" placeholder="month"
+                                pattern="(0[1-9]|1[012])" maxlength="2" required>
+                        </div>
+                        <div class="col-md-2 col-sm-6">
+                            <input type="text" name="year" class="form-control" placeholder="year" pattern="20[0-9]{2}"
+                                maxlength="4" required>
+                        </div>
+                        <div class="col-md-4 col-sm-0"></div>
+                    </div>
+                    <label for="p_name">CVV number: </label>
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <input type="password" name="cardno" class="form-control" placeholder="" pattern="[0-9]{3}"
+                                maxlength="3" required>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Done</button>
+                </form>
+                <br>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo"
+                    style="color: black;">
+                    UPI
+                </button>
+            </h2>
+            <div id="flush-collapseTwo" class="accordion-collapse collapse text-center"
+                aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                    <form action="/home/payment" method="post">
+                        <label for="p_name">Enter your UPI Id: </label>
+                        <div class="row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <input type="text" name="upiid" class="form-control" placeholder="abcdef@xyz"
+                                    pattern=".*@.*">
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+                        <h2>OR</h2>
+                        <h6>Scan the below QR code to pay</h6>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Amount:₹{{ amount }}"
+                            alt="qr" />
+                        <br>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Done</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+{% endblock %}
