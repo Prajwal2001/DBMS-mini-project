@@ -1,3 +1,4 @@
 Field,Type,Null,Key,Default,Extra
-train_no,int,NO,PRI,NULL,auto_increment
-train_name,varchar(25),NO,,NULL,
+stat_id,int,NO,PRI,NULL,auto_increment
+stat_name,varchar(25),NO,,NULL,
+stat_loc,varchar(25),NO,,NULL,

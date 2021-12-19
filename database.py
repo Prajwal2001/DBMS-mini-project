@@ -18,6 +18,7 @@ class Database:
             database=self.__data["database"],
             autocommit=True
         )
+        self.__price = 0
 
         self.__cursor = self.__mydb.cursor()
 
@@ -86,7 +87,7 @@ class Database:
         for pnr in self.__cursor.fetchall():
 
             self.__cursor.execute(
-                f"""SELECT T.pnr, travel_date, T.train_no, TR.train_name, A.stat_loc, B.stat_loc, booking_date 
+                f"""SELECT T.pnr, travel_date, T.train_no, TR.train_name, A.stat_loc, B.stat_loc, booking_date, T.price 
                 FROM tickets T join users U on T.user_id = U.user_id join trains TR on T.train_no = TR.train_no, stations A, stations B 
                 WHERE T.pnr = { pnr[0] } and 
                     A.stat_id in (SELECT from_station FROM tickets WHERE pnr = { pnr[0] }) and 
@@ -101,7 +102,7 @@ class Database:
                 WHERE T.pnr = { pnr[0] } and 
                     A.stat_id in (SELECT from_station FROM tickets WHERE pnr = { pnr[0] }) and 
                     B.stat_id in (SELECT to_station FROM tickets WHERE pnr = { pnr[0] })
-                ORDER BY p_name;"""
+                ORDER BY seat_no;"""
             )
             passengers = self.__cursor.fetchall()
 
@@ -138,7 +139,8 @@ class Database:
                     "arrival_time": source_timing[0][0],
                     "depart_time": source_timing[0][1],
                     "reaching_time": destination_timing[0][0],
-                    "reaching_date": self.calculate_reaching_date(destination_timing[0][1], self.convert_date_format(ticket[0][1]))
+                    "reaching_date": self.calculate_reaching_date(destination_timing[0][1], self.convert_date_format(ticket[0][1])),
+                    "price": ticket[0][7]
                 }
             )
 
@@ -177,6 +179,8 @@ class Database:
                 sourceData = sourceData[0]
             sourceSeqno = sourceData[0] if sourceData else None
             if sourceSeqno and destSeqno and sourceSeqno < destSeqno:
+                noOfStats = destSeqno - sourceSeqno
+                self.__price = 10 * noOfStats
                 self.__cursor.execute(
                     f"SELECT train_name FROM trains WHERE train_no = {train_no[0]}")
                 train_name = self.__cursor.fetchall()[0][0]
@@ -188,6 +192,7 @@ class Database:
                     "arrival_time": sourceData[1],
                     "departure_time": sourceData[2],
                     "reaching_time": destData[1],
+                    "price": self.__price,
                 })
         return trains_list
 
@@ -205,7 +210,7 @@ class Database:
         print(travel_date_list)
 
         self.__cursor.execute(
-            f"""INSERT INTO tickets VALUES (null, {stations[0][0]}, {stations[0][1]}, '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}', '{travel_date_list[0]}-{travel_date_list[1]}-{travel_date_list[2]}', {ticket_details['user_id']}, {ticket_details['train_no']})""")
+            f"""INSERT INTO tickets VALUES (null, {stations[0][0]}, {stations[0][1]}, '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}', '{travel_date_list[0]}-{travel_date_list[1]}-{travel_date_list[2]}', {ticket_details['user_id']}, {ticket_details['train_no']}, null)""")
         self.__cursor.execute(f"""
         SELECT pnr
         FROM tickets
@@ -218,10 +223,13 @@ class Database:
         """)
         pnr = int(self.__cursor.fetchall()[0][0])
         seat_no = randint(1, 500)
+        totalPrice = 0
         for passenger in ticket_details['passengers']:
             self.__cursor.execute(
                 f"""INSERT INTO passengers VALUES (null, '{passenger['p_name']}', {passenger['p_age']}, {seat_no}, {pnr})""")
+            totalPrice += self.__price
             seat_no += 1
+        self.__cursor.execute(f"""UPDATE tickets SET price={totalPrice}""")
 
     def cancel_ticket(self, pnr):
         self.__cursor.execute(f"""DELETE FROM tickets WHERE pnr = {pnr}""")
