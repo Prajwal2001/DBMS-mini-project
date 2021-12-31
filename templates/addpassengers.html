@@ -59,6 +59,7 @@
             aria-valuemax="100"></div>
     </div>
     <br>
+    <h2>Add passengers</h2>
     <form action="/home/addpassengers" method='post' class="addpassengers">
         <div class="row">
             <div class="col-md-6">
@@ -72,7 +73,9 @@
         </div>
         <button class="btn btn-primary" type="submit" style="margin-top:25px;">Add Passenger</button>
     </form>
+    {% if passengers %}
     <a href="/home/payment" class="btn btn-primary" style="margin-top: 10px;">Done</a>
+    {% endif %}
 </div>
 {% endblock %}
 {% block scripts %}

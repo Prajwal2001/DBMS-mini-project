@@ -37,72 +37,70 @@ class Database:
         self.__cursor.execute(f"SELECT * FROM users")
 
         return [{
-            "user_id": item[0],
-            "user_name": item[1],
-            "email": item[2],
-            "password": item[3]
-        } for item in self.__cursor.fetchall()]
+            "user_id": userData[0],
+            "user_name": userData[1],
+            "email": userData[2],
+            "password": userData[3]
+        } for userData in self.__cursor.fetchall()]
 
-    def does_user_exist(self, user_id: list):
+    def does_user_exist(self, userData: list):
         """Checks if the user_id exists in the database"""
         self.__cursor.execute(
             f"""SELECT * 
             FROM users 
-            WHERE user_name = '{user_id[0]}' and 
-            password = '{hashlib.md5(user_id[1].encode()).hexdigest()}'""")
+            WHERE user_name = '{userData[0]}' AND 
+            password = '{hashlib.md5(userData[1].encode()).hexdigest()}'""")
         res = self.__cursor.fetchall()
         return res
 
-    def get_user_id_by_user_name(self, user_name):
+    def get_user_id_by_user_name(self, userName):
         """Returns user_id for given user_name"""
         self.__cursor.execute(f"""
             SELECT * 
             FROM users 
-            WHERE user_name = '{user_name}';
+            WHERE user_name = '{userName}';
             """)
         res = self.__cursor.fetchall()
-        if res:
-            return res[0][0]
-        return None
+        return res[0][0] if res else None
 
     def convert_date_format(self, date):
         date = str(date).split('-')
         return f"{date[-1]}-{date[-2]}-{date[-3]}"
 
-    def calculate_reaching_date(self, days, travelling_date):
-        temp = travelling_date.split('-')
-        travelling_date = date(int(temp[2]), int(temp[1]), int(temp[0]))
-        travelling_date = travelling_date + timedelta(int(days))
-        return self.convert_date_format(travelling_date)
+    def calculate_reaching_date(self, days, travellingDate):
+        temp = travellingDate.split('-')
+        travellingDate = date(int(temp[2]), int(temp[1]), int(temp[0]))
+        travellingDate = travellingDate + timedelta(int(days))
+        return self.convert_date_format(travellingDate)
 
-    def get_tickets(self, user_id: int):
+    def get_tickets(self, userId: int):
         """Returns tickets for given user_id"""
 
         self.__cursor.execute(
             f"""
             SELECT pnr 
             FROM tickets 
-            WHERE user_id = {user_id}
+            WHERE user_id = {userId}
             """)
         tickets_list = []
         for pnr in self.__cursor.fetchall():
 
             self.__cursor.execute(
                 f"""SELECT T.pnr, travel_date, T.train_no, TR.train_name, A.stat_loc, B.stat_loc, booking_date, T.price 
-                FROM tickets T join users U on T.user_id = U.user_id join trains TR on T.train_no = TR.train_no, stations A, stations B 
-                WHERE T.pnr = { pnr[0] } and 
-                    A.stat_id in (SELECT from_station FROM tickets WHERE pnr = { pnr[0] }) and 
-                    B.stat_id in (SELECT to_station FROM tickets WHERE pnr = { pnr[0] })
+                FROM tickets T JOIN users U on T.user_id = U.user_id JOIN trains TR on T.train_no = TR.train_no, stations A, stations B 
+                WHERE T.pnr = { pnr[0] } AND 
+                    A.stat_id IN (SELECT from_station FROM tickets WHERE pnr = { pnr[0] }) AND 
+                    B.stat_id IN (SELECT to_station FROM tickets WHERE pnr = { pnr[0] })
                 ORDER BY travel_date;"""
             )
             ticket = self.__cursor.fetchall()
 
             self.__cursor.execute(
                 f"""SELECT T.pnr, p_name, p_age, seat_no 
-                FROM tickets T join users U on T.user_id = U.user_id join trains TR on T.train_no = TR.train_no join passengers P on P.pnr = T.pnr , stations A, stations B 
-                WHERE T.pnr = { pnr[0] } and 
-                    A.stat_id in (SELECT from_station FROM tickets WHERE pnr = { pnr[0] }) and 
-                    B.stat_id in (SELECT to_station FROM tickets WHERE pnr = { pnr[0] })
+                FROM tickets T JOIN users U on T.user_id = U.user_id JOIN trains TR on T.train_no = TR.train_no join passengers P on P.pnr = T.pnr , stations A, stations B 
+                WHERE T.pnr = { pnr[0] } AND 
+                    A.stat_id IN (SELECT from_station FROM tickets WHERE pnr = { pnr[0] }) AND 
+                    B.stat_id IN (SELECT to_station FROM tickets WHERE pnr = { pnr[0] })
                 ORDER BY seat_no;"""
             )
             passengers = self.__cursor.fetchall()
@@ -125,7 +123,7 @@ class Database:
                     stat_id = (SELECT stat_id 
                                 FROM stations 
                                 WHERE stat_loc = '{ticket[0][5]}')""")
-            destination_timing = self.__cursor.fetchall()
+            destinationTiming = self.__cursor.fetchall()
 
             tickets_list.append(
                 {
@@ -139,8 +137,8 @@ class Database:
                     "booking_date": self.convert_date_format(ticket[0][6]),
                     "arrival_time": source_timing[0][0],
                     "depart_time": source_timing[0][1],
-                    "reaching_time": destination_timing[0][0],
-                    "reaching_date": self.calculate_reaching_date(destination_timing[0][1], self.convert_date_format(ticket[0][1])),
+                    "reaching_time": destinationTiming[0][0],
+                    "reaching_date": self.calculate_reaching_date(destinationTiming[0][1], self.convert_date_format(ticket[0][1])),
                     "price": ticket[0][7]
                 }
             )
@@ -151,65 +149,67 @@ class Database:
         self.__cursor.execute("SELECT stat_name FROM stations")
         return [station[0] for station in self.__cursor.fetchall()]
 
-    def get_trains(self, source_name, destination_name):
+    def get_trains(self, sourceName, destinationName):
         trains_list = []
         self.__cursor.execute(
             f"""
             SELECT A.stat_id, B.stat_id 
             FROM stations A, stations B 
-            WHERE A.stat_name = '{source_name}' AND 
-                B.stat_name = '{destination_name}';""")
+            WHERE A.stat_name = '{sourceName}' AND 
+                B.stat_name = '{destinationName}';""")
         source, destination = self.__cursor.fetchall()[0]
         self.__cursor.execute('SELECT train_no FROM trains')
         train_nos = self.__cursor.fetchall()
-        for train_no in train_nos:
+        for trainNo in train_nos:
             self.__cursor.execute(
                 f"""SELECT seq_no, arrival_time 
                 FROM covers 
-                WHERE train_no = {train_no[0]} AND stat_id = {destination};""")
+                WHERE train_no = {trainNo[0]} AND stat_id = {destination};""")
             destData = self.__cursor.fetchall()
             if destData:
-                destData = destData[0]
-            destSeqno = destData[0] if destData else None
+                destSeqno, reachingTime = destData[0]
+            else:
+                destSeqno = None
             self.__cursor.execute(
                 f"""SELECT seq_no, arrival_time, depart_time 
                 FROM covers 
-                WHERE train_no = {train_no[0]} AND stat_id = {source};""")
+                WHERE train_no = {trainNo[0]} AND stat_id = {source};""")
             sourceData = self.__cursor.fetchall()
             if sourceData:
-                sourceData = sourceData[0]
-            sourceSeqno = sourceData[0] if sourceData else None
+                sourceSeqno, arrivalTime, departureTime = sourceData[0]
+            else:
+                sourceSeqno = None
             if sourceSeqno and destSeqno and sourceSeqno < destSeqno:
                 noOfStats = destSeqno - sourceSeqno
                 self.__price = 10 * noOfStats
                 self.__cursor.execute(
-                    f"SELECT train_name FROM trains WHERE train_no = {train_no[0]}")
-                train_name = self.__cursor.fetchall()[0][0]
+                    f"SELECT train_name FROM trains WHERE train_no = {trainNo[0]}")
+                trainName = self.__cursor.fetchall()[0][0]
                 trains_list.append({
-                    "train_no": train_no[0],
-                    "train_name": train_name,
-                    "source": source_name,
-                    "destination": destination_name,
-                    "arrival_time": sourceData[1],
-                    "departure_time": sourceData[2],
-                    "reaching_time": destData[1],
+                    "train_no": trainNo[0],
+                    "train_name": trainName,
+                    "source": sourceName,
+                    "destination": destinationName,
+                    "arrival_time": arrivalTime,
+                    "departure_time": departureTime,
+                    "reaching_time": reachingTime,
                     "price": self.__price,
                 })
         return trains_list
 
-    def add_passengers_ticket(self, passenger_details):
+    def add_passengers_ticket(self, passengerDetails):
         self.__cursor.execute(f"""
         SELECT A.stat_id, B.stat_id
         FROM stations A, stations B
-        WHERE A.stat_name='{passenger_details['source']}' AND
-        B.stat_name='{passenger_details['destination']}'
+        WHERE A.stat_name='{passengerDetails['source']}' AND
+        B.stat_name='{passengerDetails['destination']}'
         """)
         stations = self.__cursor.fetchall()
 
-        travel_date_list = str(passenger_details['travel_date']).split('-')
+        travel_date_list = str(passengerDetails['travel_date']).split('-')
 
         self.__cursor.execute(
-            f"""INSERT INTO tickets VALUES (null, {stations[0][0]}, {stations[0][1]}, '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}', '{travel_date_list[0]}-{travel_date_list[1]}-{travel_date_list[2]}', {passenger_details['user_id']}, {passenger_details['train_no']}, null)""")
+            f"""INSERT INTO tickets VALUES (null, {stations[0][0]}, {stations[0][1]}, '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}', '{travel_date_list[0]}-{travel_date_list[1]}-{travel_date_list[2]}', {passengerDetails['user_id']}, {passengerDetails['train_no']}, null)""")
         self.__cursor.execute(f"""
         SELECT pnr
         FROM tickets
@@ -217,13 +217,13 @@ class Database:
             to_station = '{stations[0][1]}' AND
             booking_date = '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}' AND
             travel_date = '{travel_date_list[0]}-{travel_date_list[1]}-{travel_date_list[2]}' AND
-            user_id = {passenger_details['user_id']} AND
-            train_no = {passenger_details['train_no']}
+            user_id = {passengerDetails['user_id']} AND
+            train_no = {passengerDetails['train_no']}
         """)
         pnr = int(self.__cursor.fetchall()[0][0])
         seat_no = randint(1, 500)
         self.__totalPrice = 0
-        for passenger in passenger_details['passengers']:
+        for passenger in passengerDetails['passengers']:
             self.__cursor.execute(
                 f"""INSERT INTO passengers VALUES (null, '{passenger['p_name']}', {passenger['p_age']}, {seat_no}, {pnr})""")
             self.__totalPrice += self.__price

@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.secret_key = "dbmsminiproject"
 
 db = Database()
-passenger_details = {}
+passengerDetails = {}
 
 
 @app.route('/')
@@ -57,15 +57,15 @@ def viewtickets():
 
 @app.route("/home/booktickets", methods=["GET", "POST"])
 def booktickets():
-    global passenger_details
+    global passengerDetails
     if session['user_id']:
         if request.method == 'POST':
             source = request.form.get('source')
             destination = request.form.get('destination')
             travel_date = request.form.get('travel_date')
-            passenger_details['source'] = source
-            passenger_details['destination'] = destination
-            passenger_details['travel_date'] = travel_date
+            passengerDetails['source'] = source
+            passengerDetails['destination'] = destination
+            passengerDetails['travel_date'] = travel_date
             return redirect("/home/trains")
         return render_template("booktickets.html", stations=db.get_stations())
     return redirect('/login')
@@ -73,41 +73,41 @@ def booktickets():
 
 @app.route("/home/trains")
 def trains():
-    global passenger_details
+    global passengerDetails
     if session['user_id']:
-        return render_template("trains.html", trains=db.get_trains(passenger_details['source'], passenger_details['destination']))
+        return render_template("trains.html", trains=db.get_trains(passengerDetails['source'], passengerDetails['destination']))
     return redirect('/login')
 
 
 @app.route("/home/<int:train_no>/addpassengers")
 def get_train_no(train_no):
-    global passenger_details
-    passenger_details['train_no'] = train_no
-    passenger_details['passengers'] = []
-    passenger_details['user_id'] = session['user_id']
+    global passengerDetails
+    passengerDetails['train_no'] = train_no
+    passengerDetails['passengers'] = []
+    passengerDetails['user_id'] = session['user_id']
     return redirect("/home/addpassengers")
 
 
 @app.route('/home/addpassengers', methods=['GET', 'POST'])
 def addpassengers():
-    global passenger_details
+    global passengerDetails
     if session['user_id']:
         if request.method == 'POST':
             name = request.form.get('p_name')
             age = int(request.form.get('p_age'))
-            passenger_details['passengers'].append({
+            passengerDetails['passengers'].append({
                 'p_name': name,
                 'p_age': age
             })
-        return render_template("addpassengers.html")
+        return render_template("addpassengers.html", passengers=passengerDetails['passengers'])
     return redirect("/login")
 
 
 @app.route("/home/reserveticket")
 def reserveticket():
-    global passenger_details
+    global passengerDetails
     if session['user_id']:
-        db.add_passengers_ticket(passenger_details)
+        db.add_passengers_ticket(passengerDetails)
         return redirect("/home/viewtickets")
 
 
@@ -119,11 +119,11 @@ def cancelticket(pnr):
 
 @app.route('/home/payment', methods=['GET', 'POST'])
 def payment():
-    global passenger_details
+    global passengerDetails
     if session['user_id']:
         if request.method == 'POST':
             return redirect('/home/reserveticket')
-        return render_template("payment.html", amount=db.get_totalprice(passenger_details))
+        return render_template("payment.html", amount=db.get_totalprice(passengerDetails))
 
 
 @app.route("/signout")
