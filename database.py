@@ -1,6 +1,7 @@
 import hashlib
 import mysql.connector
 import yaml
+from pprint import pprint
 from datetime import timedelta, date, datetime
 from random import randint
 
@@ -206,23 +207,26 @@ class Database:
         """)
         stations = self.__cursor.fetchall()
 
-        travel_date_list = str(passengerDetails['travel_date']).split('-')
+        travelDateList = str(passengerDetails['travel_date']).split('-')
 
         self.__cursor.execute(
-            f"""INSERT INTO tickets VALUES (null, {stations[0][0]}, {stations[0][1]}, '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}', '{travel_date_list[0]}-{travel_date_list[1]}-{travel_date_list[2]}', {passengerDetails['user_id']}, {passengerDetails['train_no']}, null)""")
+            f"""INSERT INTO tickets VALUES (null, {stations[0][0]}, {stations[0][1]}, '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}', '{travelDateList[0]}-{travelDateList[1]}-{travelDateList[2]}', {passengerDetails['user_id']}, {passengerDetails['train_no']}, null)""")
+
         self.__cursor.execute(f"""
         SELECT pnr
         FROM tickets
         WHERE from_station = '{stations[0][0]}' AND
             to_station = '{stations[0][1]}' AND
             booking_date = '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}' AND
-            travel_date = '{travel_date_list[0]}-{travel_date_list[1]}-{travel_date_list[2]}' AND
+            travel_date = '{travelDateList[0]}-{travelDateList[1]}-{travelDateList[2]}' AND
             user_id = {passengerDetails['user_id']} AND
             train_no = {passengerDetails['train_no']}
         """)
+
         pnr = int(self.__cursor.fetchall()[0][0])
         seat_no = randint(1, 500)
         self.__totalPrice = 0
+
         for passenger in passengerDetails['passengers']:
             self.__cursor.execute(
                 f"""INSERT INTO passengers VALUES (null, '{passenger['p_name']}', {passenger['p_age']}, {seat_no}, {pnr})""")
@@ -241,5 +245,31 @@ class Database:
             price += self.__price
 
         return price
+
+    def get_train_details(self):
+        self.__cursor.execute("""
+        SELECT train_no, train_name, stat_name, arrival_time, depart_time 
+        FROM all_train_info 
+        ORDER BY train_no, seq_no;
+        """)
+        trainDetails = self.__cursor.fetchall()
+        trainNos = []
+        for tr in [train[0] for train in trainDetails]:
+            if tr not in trainNos:
+                trainNos.append(tr)
+        trainNames = []
+        for tr in [train[1] for train in trainDetails]:
+            if tr not in trainNames:
+                trainNames.append(tr)
+        trainsList = [{
+            "train_no": trainNos[i],
+            "train_name": trainNames[i],
+            "stations_list": [tr[2] for tr in trainDetails if trainNos[i] == tr[0]],
+            "arrival_times": [tr[3] for tr in trainDetails if trainNos[i] == tr[0]],
+            "depart_times": [tr[4] for tr in trainDetails if trainNos[i] == tr[0]],
+            "no_of_stations": len([tr[2] for tr in trainDetails if trainNos[i] == tr[0]])
+        } for i in range(len(trainNos))]
+
+        return trainsList
 
 # DATE_SUB(CURDATE(), INTERVAL 1 DAY)

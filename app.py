@@ -41,18 +41,12 @@ def signup():
 
 @app.route("/home")
 def home():
-    if session['user_id']:
-        return render_template("home.html")
-    else:
-        return redirect('/login', code=302)
+    return render_template("home.html") if session['user_id'] else redirect('/login', code=302)
 
 
 @app.route("/home/viewtickets")
 def viewtickets():
-    if session['user_id']:
-        return render_template("tickets.html", tickets=db.get_tickets(session['user_id']))
-    else:
-        return redirect('/login')
+    return render_template("tickets.html", tickets=db.get_tickets(session['user_id'])) if session['user_id'] else redirect('/login')
 
 
 @app.route("/home/booktickets", methods=["GET", "POST"])
@@ -71,6 +65,11 @@ def booktickets():
     return redirect('/login')
 
 
+@app.route('/home/getalltrainsinfo')
+def get_all_trains_info():
+    return render_template("trainsinfo.html", trainsinfo=db.get_train_details()) if session['user_id'] else redirect("/login")
+
+
 @app.route("/home/trains")
 def trains():
     global passengerDetails
@@ -79,7 +78,7 @@ def trains():
     return redirect('/login')
 
 
-@app.route("/home/<int:train_no>/addpassengers")
+@app.route("/home/<int:train_no>")
 def get_train_no(train_no):
     global passengerDetails
     passengerDetails['train_no'] = train_no
@@ -109,6 +108,7 @@ def reserveticket():
     if session['user_id']:
         db.add_passengers_ticket(passengerDetails)
         return redirect("/home/viewtickets")
+    return redirect("/login")
 
 
 @app.route('/home/cancelticket/<int:pnr>')
@@ -124,6 +124,7 @@ def payment():
         if request.method == 'POST':
             return redirect('/home/reserveticket')
         return render_template("payment.html", amount=db.get_totalprice(passengerDetails))
+    return redirect("/login")
 
 
 @app.route("/signout")

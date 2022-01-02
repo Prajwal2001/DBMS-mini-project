@@ -1,6 +1,6 @@
 {% extends 'header.html' %}
 
-{% block title %} Trains {% endblock %}
+{% block title %} Train Details {% endblock %}
 {% block link %}
 <link rel="stylesheet" href="{{ url_for('static', filename= 'bootswatch/bootstrap.min.css') }}">
 {% endblock %}
@@ -53,54 +53,34 @@
 
 <!-- Body -->
 
-<div class="container-scrollable">
-    {% if trains %}
-    <div class="progress" style="height: 5px;">
-        <div class="progress-bar" role="progressbar" style="width: 33%" aria-valuenow="33" aria-valuemin="0"
-            aria-valuemax="100"></div>
-    </div>
-    <h1>Available Trains:</h1>
-    {% for train in trains %}
-    <div class="card text-center">
-        <div class="card-header row">
-            <div class="col-md-6">
-                <h4>Train Name: {{ train.train_name }}</h4>
-            </div>
-            <div class="col-md-6">
-                <h4>Train No: {{ train.train_no }}</h4>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <h4>From: {{ train.source }}</h4>
-            </div>
-            <div class="col-md-4">
-                <h2><i class="fas fa-arrow-right"></i></h2>
-                <h2><i class="fas fa-arrow-down"></i></h2>
-            </div>
-            <div class="col-md-4">
-                <h4>To: {{ train.destination }}</h4>
-            </div>
-        </div>
-        <h4>Arrival Time: {{ train.arrival_time }}</h4>
-        <h4>Departure Time: {{ train.departure_time }}</h4>
-        <h4>Reaching Time: {{ train.reaching_time }}</h4>
-        <h4>Price: ₹{{ train.price }} per head</h4>
-        <div class="row">
-            <div class="col-md-5"></div>
-            <div class="col-md-2" style="margin: 10px 0;">
-                <a href="/home/{{ train.train_no }}" class="btn btn-primary">Select</a>
-            </div>
-            <div class="col-md-5"></div>
-        </div>
-    </div>
-    {% endfor %}
-    {% else %}
-    <div class="text-center">
-        <h1>No trains available for this route!</h1>
-        <a href="/home/booktickets" class="btn btn-primary">Book Ticket</a>
-    </div>
-    {% endif %}
+<div class="container container-scrollable">
+    <table class="table text-center table-primary table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>Train No</th>
+                <th>Train Name</th>
+                <th>Station</th>
+                <th>Arrival Time</th>
+                <th>Departure Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for train in trainsinfo %}
+            <tr>
+                <td rowspan="{{ train.no_of_stations + 1 }}">{{ train.train_no }}</td>
+                <td rowspan="{{ train.no_of_stations + 1 }}">{{ train.train_name }}</td>
+            </tr>
+            {% for i in range(train.no_of_stations) %}
+            <tr>
+                <td>{{ train.stations_list[i] }}</td>
+                <td>{{ train.arrival_times[i] }}</td>
+                <td>{{ train.depart_times[i] }}</td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+
 </div>
 {% endblock %}
 {% block scripts %}
