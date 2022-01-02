@@ -230,7 +230,7 @@ class Database:
             print("\n\n", self.__totalPrice)
             seat_no += 1
         self.__cursor.execute(
-            f"""UPDATE tickets SET price={self.__totalPrice}""")
+            f"""UPDATE tickets SET price={self.__totalPrice} WHERE pnr={pnr}""")
 
     def cancel_ticket(self, pnr):
         self.__cursor.execute(f"""DELETE FROM tickets WHERE pnr = {pnr}""")
@@ -241,3 +241,5 @@ class Database:
             price += self.__price
 
         return price
+
+# DATE_SUB(CURDATE(), INTERVAL 1 DAY)
