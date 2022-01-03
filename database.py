@@ -258,3 +258,85 @@ class Database:
 
 
 # DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+
+# SELECT
+# T.pnr,
+# p_name,
+# p_age,
+# seat_no
+# FROM
+# tickets T
+# JOIN users U on T.user_id = U.user_id
+# JOIN trains TR on T.train_no = TR.train_no
+# join passengers P on P.pnr = T.pnr,
+# stations A,
+# stations B
+# WHERE
+# T.pnr = p
+# AND A.stat_id IN(
+#     SELECT
+#     from_station
+#     FROM
+#     tickets
+#     WHERE
+#     pnr=p
+# )
+# AND B.stat_id IN(
+#     SELECT
+#     to_station
+#     FROM
+#     tickets
+#     WHERE
+#     pnr=p
+# )
+# ORDER BY
+# seat_no
+
+
+# SELECT
+# T.pnr,
+# travel_date,
+# T.train_no,
+# TR.train_name,
+# A.stat_loc,
+# B.stat_loc,
+# booking_date,
+# T.price
+# FROM
+# tickets T
+# JOIN users U on T.user_id = U.user_id
+# JOIN trains TR on T.train_no = TR.train_no,
+# stations A,
+# stations B
+# WHERE
+# T.pnr = p
+# AND A.stat_id IN(
+#     SELECT
+#     from_station
+#     FROM
+#     tickets
+#     WHERE
+#     pnr=p
+# )
+# AND B.stat_id IN(
+#     SELECT
+#     to_station
+#     FROM
+#     tickets
+#     WHERE
+#     pnr=p
+# )
+# ORDER BY
+# travel_date
+
+# SELECT
+# train_no,
+# train_name,
+# stat_name,
+# arrival_time,
+# depart_time
+# FROM
+# all_train_info
+# ORDER BY
+# train_no,
+# seq_no
