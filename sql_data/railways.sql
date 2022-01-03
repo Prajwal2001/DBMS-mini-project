@@ -7,13 +7,30 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
+/*!50503 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Temporary view structure for view `all_train_info`
+--
+
+DROP TABLE IF EXISTS `all_train_info`;
+/*!50001 DROP VIEW IF EXISTS `all_train_info`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `all_train_info` AS SELECT 
+ 1 AS `train_no`,
+ 1 AS `train_name`,
+ 1 AS `stat_name`,
+ 1 AS `arrival_time`,
+ 1 AS `depart_time`,
+ 1 AS `seq_no`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `covers`
@@ -62,7 +79,7 @@ CREATE TABLE `passengers` (
   PRIMARY KEY (`p_id`),
   KEY `pnr` (`pnr`),
   CONSTRAINT `passengers_ibfk_1` FOREIGN KEY (`pnr`) REFERENCES `tickets` (`pnr`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,6 +88,7 @@ CREATE TABLE `passengers` (
 
 LOCK TABLES `passengers` WRITE;
 /*!40000 ALTER TABLE `passengers` DISABLE KEYS */;
+INSERT INTO `passengers` VALUES (79,'Prajwal Kulkarni',21,224,535),(80,'Bhoomika Kulkarni',11,495,536),(81,'Prajwal Kulkarni',21,496,536),(82,'Veena Kulkarni',46,497,536);
 /*!40000 ALTER TABLE `passengers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,7 +142,7 @@ CREATE TABLE `tickets` (
   CONSTRAINT `tickets_ibfk_2` FOREIGN KEY (`train_no`) REFERENCES `trains` (`train_no`) ON DELETE CASCADE,
   CONSTRAINT `tickets_ibfk_3` FOREIGN KEY (`from_station`) REFERENCES `stations` (`stat_id`) ON DELETE CASCADE,
   CONSTRAINT `tickets_ibfk_4` FOREIGN KEY (`to_station`) REFERENCES `stations` (`stat_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=521 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=537 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,6 +151,7 @@ CREATE TABLE `tickets` (
 
 LOCK TABLES `tickets` WRITE;
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
+INSERT INTO `tickets` VALUES (535,200,204,'2022-01-03','2022-01-12',6,1003,40),(536,201,206,'2022-01-03','2022-01-19',6,1003,150);
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -147,7 +166,7 @@ CREATE TABLE `trains` (
   `train_no` int NOT NULL AUTO_INCREMENT,
   `train_name` varchar(25) NOT NULL,
   PRIMARY KEY (`train_no`)
-) ENGINE=InnoDB AUTO_INCREMENT=1004 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1005 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,7 +194,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_name` (`user_name`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,8 +203,167 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (6,'prajwal k','kulkarniprajwal.01@gmail.com','e99a18c428cb38d5f260853678922e03');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'railways'
+--
+
+--
+-- Dumping routines for database 'railways'
+--
+/*!50003 DROP PROCEDURE IF EXISTS `get_passengers` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_passengers`(p int)
+BEGIN
+SELECT
+  T.pnr,
+  p_name,
+  p_age,
+  seat_no
+FROM
+  tickets T
+  JOIN users U on T.user_id = U.user_id
+  JOIN trains TR on T.train_no = TR.train_no
+  join passengers P on P.pnr = T.pnr,
+  stations A,
+  stations B
+WHERE
+  T.pnr = p
+  AND A.stat_id IN (
+    SELECT
+      from_station
+    FROM
+      tickets
+    WHERE
+      pnr = p
+  )
+  AND B.stat_id IN (
+    SELECT
+      to_station
+    FROM
+      tickets
+    WHERE
+      pnr = p
+  )
+ORDER BY
+  seat_no;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_tickets` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_tickets`(p int)
+BEGIN
+SELECT
+  T.pnr,
+  travel_date,
+  T.train_no,
+  TR.train_name,
+  A.stat_loc,
+  B.stat_loc,
+  booking_date,
+  T.price
+FROM
+  tickets T
+  JOIN users U on T.user_id = U.user_id
+  JOIN trains TR on T.train_no = TR.train_no,
+  stations A,
+  stations B
+WHERE
+  T.pnr = p
+  AND A.stat_id IN (
+    SELECT
+      from_station
+    FROM
+      tickets
+    WHERE
+      pnr = p
+  )
+  AND B.stat_id IN (
+    SELECT
+      to_station
+    FROM
+      tickets
+    WHERE
+      pnr = p
+  )
+ORDER BY
+  travel_date;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `trains_info` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `trains_info`()
+BEGIN
+SELECT
+  train_no,
+  train_name,
+  stat_name,
+  arrival_time,
+  depart_time
+FROM
+  all_train_info
+ORDER BY
+  train_no,
+  seq_no;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Final view structure for view `all_train_info`
+--
+
+/*!50001 DROP VIEW IF EXISTS `all_train_info`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `all_train_info` AS select `t`.`train_no` AS `train_no`,`t`.`train_name` AS `train_name`,`s`.`stat_name` AS `stat_name`,`c`.`arrival_time` AS `arrival_time`,`c`.`depart_time` AS `depart_time`,`c`.`seq_no` AS `seq_no` from ((`trains` `t` join `stations` `s`) join `covers` `c` on(((`t`.`train_no` = `c`.`train_no`) and (`s`.`stat_id` = `c`.`stat_id`)))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -196,4 +374,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-24 21:47:57
+-- Dump completed on 2022-01-03  9:03:51
