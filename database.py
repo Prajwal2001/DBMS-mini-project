@@ -75,6 +75,11 @@ class Database:
         travellingDate = travellingDate + timedelta(int(days))
         return self.convert_date_format(travellingDate)
 
+    def convert_time_format(self, time):
+        hours = time.seconds//3600
+        mins = (time.seconds % 3600)//60
+        return "%.2d:%.2d:00" % (hours, mins)
+
     def get_tickets(self, userId: int):
         """Returns tickets for given user_id"""
 
@@ -124,9 +129,9 @@ class Database:
                     "to_station": ticket[0][5],
                     "passengers": [[passenger[1], passenger[2], passenger[3]] for passenger in passengers if passenger[0] == ticket[0][0]],
                     "booking_date": self.convert_date_format(ticket[0][6]),
-                    "arrival_time": sourceTiming[0][0],
-                    "depart_time": sourceTiming[0][1],
-                    "reaching_time": destinationTiming[0][0],
+                    "arrival_time": self.convert_time_format(sourceTiming[0][0]),
+                    "depart_time": self.convert_time_format(sourceTiming[0][1]),
+                    "reaching_time": self.convert_time_format(destinationTiming[0][0]),
                     "reaching_date": self.calculate_reaching_date(destinationTiming[0][1], self.convert_date_format(ticket[0][1])),
                     "price": ticket[0][7]
                 }
@@ -179,9 +184,9 @@ class Database:
                     "train_name": trainName,
                     "source": sourceName,
                     "destination": destinationName,
-                    "arrival_time": arrivalTime,
-                    "departure_time": departureTime,
-                    "reaching_time": reachingTime,
+                    "arrival_time": self.convert_time_format(arrivalTime),
+                    "departure_time": self.convert_time_format(departureTime),
+                    "reaching_time": self.convert_time_format(reachingTime),
                     "price": self.__price,
                 })
         return trains_list
@@ -251,8 +256,8 @@ class Database:
             "train_no": trainNos[i],
             "train_name": trainNames[i],
             "stations_list": [tr[2] for tr in trainDetails if trainNos[i] == tr[0]],
-            "arrival_times": [tr[3] for tr in trainDetails if trainNos[i] == tr[0]],
-            "depart_times": [tr[4] for tr in trainDetails if trainNos[i] == tr[0]],
+            "arrival_times": [self.convert_time_format(tr[3]) for tr in trainDetails if trainNos[i] == tr[0]],
+            "depart_times": [self.convert_time_format(tr[4]) for tr in trainDetails if trainNos[i] == tr[0]],
             "no_of_stations": len([tr[2] for tr in trainDetails if trainNos[i] == tr[0]])
         } for i in range(len(trainNos))]
 
