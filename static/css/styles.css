@@ -137,6 +137,9 @@
   .navbar {
     margin-bottom: 10px;
   }
+  .container-scrollable {
+    width: 100%;
+  }
   #logo {
     top: 0;
     width: 100px;
@@ -148,10 +151,10 @@
   .fa-arrow-down {
     display: inline;
   }
-  .container-scrollable {
-    width: 100%;
-  }
   .table {
     width: 150%;
+  }
+  .card-body h5 {
+    font-size: 15px;
   }
 }
