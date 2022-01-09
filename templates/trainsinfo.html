@@ -54,32 +54,34 @@
 <!-- Body -->
 
 <div class="container container-scrollable">
-    <table class="table text-center table-dark table-hover table-bordered">
-        <thead>
-            <tr>
-                <th>Train No</th>
-                <th>Train Name</th>
-                <th>Station</th>
-                <th>Arrival Time</th>
-                <th>Departure Time</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for train in trainsinfo %}
-            <tr>
-                <td rowspan="{{ train.no_of_stations + 1 }}">{{ train.train_no }}</td>
-                <td rowspan="{{ train.no_of_stations + 1 }}">{{ train.train_name }}</td>
-            </tr>
-            {% for i in range(train.no_of_stations) %}
-            <tr>
-                <td>{{ train.stations_list[i] }}</td>
-                <td>{{ train.arrival_times[i] }}</td>
-                <td>{{ train.depart_times[i] }}</td>
-            </tr>
-            {% endfor %}
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive-sm">
+        <table class="table table-dark text-center table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>Train No</th>
+                    <th>Train Name</th>
+                    <th>Station</th>
+                    <th>Arrival Time</th>
+                    <th>Departure Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for train in trainsinfo %}
+                <tr>
+                    <td rowspan="{{ train.no_of_stations + 1 }}">{{ train.train_no }}</td>
+                    <td rowspan="{{ train.no_of_stations + 1 }}">{{ train.train_name }}</td>
+                </tr>
+                {% for i in range(train.no_of_stations) %}
+                <tr>
+                    <td>{{ train.stations_list[i] }}</td>
+                    <td>{{ train.arrival_times[i] }}</td>
+                    <td>{{ train.depart_times[i] }}</td>
+                </tr>
+                {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 </div>
 {% endblock %}

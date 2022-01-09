@@ -151,9 +151,9 @@
   .fa-arrow-down {
     display: inline;
   }
-  .table {
+  /* .table {
     width: 150%;
-  }
+  } */
   .card-body h5 {
     font-size: 15px;
   }

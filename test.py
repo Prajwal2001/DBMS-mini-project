@@ -1,35 +1,27 @@
-import smtplib
+class A:
+    a: int
+    b: int
 
-sender_mail = "textacct.2001@gmail.com"
-receivers_mail = "kulkarniprajwal.01@gmail.com"
+    def __str__(self):
+        return f"o.a = {self.a}, o.b = {self.b}"
 
-msg = """From: From Person %s  
-To: To Person %s  
-  
-MIME-Version:1.0  
-Content-type:text/html  
-  
-  
-Subject: Sending SMTP e-mail   
-  
-<h1> test </h1>
-<hr>
-<p>This is a test mail</p>
-<table>
-<tr> 
-<td> col1 </td>
-<td> col2 </td>
-</tr>
-<tr>
-<td> Prajwal </td>
-<td> Kulkarni </td>
-</tr>
-</table>
-""" % (sender_mail, receivers_mail)
+    def __del__(self):
+        print("End of objects life!")
 
-connection = smtplib.SMTP("smtp.gmail.com")
-connection.starttls()
-connection.login(user=sender_mail, password="text@2001")
-connection.sendmail(from_addr=sender_mail,
-                    to_addrs=receivers_mail, msg=msg)
-connection.close()
+
+def sample(o: A, l: list):
+    x = A()
+    x.a = l[-1].a + 1
+    x.b = l[-1].b + 1
+    l.append(x)
+
+
+a = A()
+a.a = 1
+a.b = 2
+l = [a]
+for i in range(10):
+    sample(a, l)
+
+for i in l:
+    print(i, id(i))
