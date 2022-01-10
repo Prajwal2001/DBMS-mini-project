@@ -47,4 +47,5 @@ Please find the attachment which contains your ticket.'''
     text = message.as_string()
     session.sendmail(sender, receiver, text)
     session.quit()
+
     print('Mail Sent')
