@@ -37,7 +37,6 @@ Please find the attachment which contains your ticket.'''
                        filename=pdfname.split("/")[2])
     message.attach(payload)
 
-    # print(f"\n\n\n\nmessage:  {message}\n\n\n")
     session = smtplib.SMTP('smtp.gmail.com', 587)
 
     session.starttls()
