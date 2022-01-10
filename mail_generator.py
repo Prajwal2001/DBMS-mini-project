@@ -3,16 +3,18 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
+import yaml
+
+with open('./credentials.yaml') as f:
+    data = yaml.load(f, Loader=yaml.FullLoader)
 
 
 def ticket_mail(email: str, name: str, fileName: str, pnr: int):
-    print(
-        f"\n\n\nemail: {email}, name: {name}, fileName: {fileName}, pnr: {pnr}\n\n")
     body = f'''Hello, {name.title()}
 Please find the attachment which contains your ticket.'''
 
     sender = 'textacct.2001@gmail.com'
-    password = 'Prajwal@2001'
+    password = data["email_password"]
     receiver = email
 
     message = MIMEMultipart()
