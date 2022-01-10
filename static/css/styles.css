@@ -14,7 +14,7 @@
 }
 .container-scrollable {
   position: relative;
-  top: 15px;
+  top: 25px;
   height: 75vh;
   overflow-y: auto;
   width: 90%;
@@ -139,6 +139,7 @@
   }
   .container-scrollable {
     width: 100%;
+    top: 15px;
   }
   #logo {
     top: 0;
@@ -151,9 +152,6 @@
   .fa-arrow-down {
     display: inline;
   }
-  /* .table {
-    width: 150%;
-  } */
   .card-body h5 {
     font-size: 15px;
   }

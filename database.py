@@ -4,6 +4,9 @@ import yaml
 from pprint import pprint
 from datetime import timedelta, date, datetime
 from random import randint
+from mail_generator import ticket_mail
+from ticket_pdf_generator import generate_ticket_pdf
+from time import sleep
 
 
 class Database:
@@ -228,6 +231,19 @@ class Database:
             seat_no += 1
         self.__cursor.execute(
             f"""UPDATE tickets SET price={self.__totalPrice} WHERE pnr={pnr}""")
+        self.__cursor.execute(f"""
+        SELECT user_id, user_name, email
+        FROM users
+        WHERE user_id = (SELECT user_id 
+                        FROM tickets
+                        WHERE pnr = {pnr});
+        """)
+        userData = self.__cursor.fetchall()
+        tickets = self.get_tickets(userData[0][0])
+        ticket = [i for i in tickets if i["pnr"] == pnr][0]
+        fileName = generate_ticket_pdf(ticket)
+        sleep(3)
+        ticket_mail(userData[0][2], userData[0][1], fileName, pnr)
 
     def cancel_ticket(self, pnr):
         self.__cursor.execute(f"""DELETE FROM tickets WHERE pnr = {pnr}""")
