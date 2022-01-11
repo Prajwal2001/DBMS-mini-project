@@ -63,7 +63,9 @@ def booktickets():
             passengerDetails['travel_date'] = travel_date
             return redirect("/home/trains")
         today = date.today()
-        return render_template("booktickets.html", stations=db.get_stations(), min_date="%d-%.2d-%.2d" % (today.year, today.month, today.day), max_date="%d-%.2d-%.2d" % (today.year + 1, today.month, today.day))
+        min = "%d-%.2d-%.2d" % (today.year, today.month, today.day)
+        max = "%d-%.2d-%.2d" % (today.year + 1, today.month, today.day)
+        return render_template("booktickets.html", stations=db.get_stations(), min_date=min, max_date=max)
     return redirect('/login')
 
 
