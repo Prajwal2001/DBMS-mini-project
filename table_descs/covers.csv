@@ -1,7 +1,0 @@
-Field,Type,Null,Key,Default,Extra
-stat_id,int,NO,MUL,NULL,
-train_no,int,NO,MUL,NULL,
-arrival_time,time,NO,,NULL,
-depart_time,time,NO,,NULL,
-days,int,NO,,0,
-seq_no,int,NO,,NULL,

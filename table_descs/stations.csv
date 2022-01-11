@@ -1,4 +1,0 @@
-Field,Type,Null,Key,Default,Extra
-stat_id,int,NO,PRI,NULL,auto_increment
-stat_name,varchar(25),NO,,NULL,
-stat_loc,varchar(25),NO,,NULL,
