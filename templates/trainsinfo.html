@@ -1,9 +1,7 @@
 {% extends 'header.html' %}
 
 {% block title %} Train Details {% endblock %}
-{% block link %}
-<link rel="stylesheet" href="{{ url_for('static', filename= 'bootswatch/bootstrap.min.css') }}">
-{% endblock %}
+
 {% block content %}
 
 <!-- Body -->
@@ -11,7 +9,6 @@
 <div class="container container-scrollable">
     <div class="table-responsive-sm">
         <table class="table table-dark text-center table-hover table-bordered">
-            <!-- <table> -->
             <thead>
                 <tr>
                     <th>Train No</th>
@@ -38,11 +35,5 @@
             </tbody>
         </table>
     </div>
-
 </div>
-{% endblock %}
-{% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-    crossorigin="anonymous"></script>
 {% endblock %}
