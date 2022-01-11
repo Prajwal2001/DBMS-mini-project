@@ -2,4 +2,4 @@
 flask_session/
 __pycache__
 __pycache__/
-tickets/*.pdf
+ticket_pnr_*.pdf
