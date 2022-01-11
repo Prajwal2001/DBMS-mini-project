@@ -1,5 +1,4 @@
 *.yaml
 flask_session/
-__pycache__
 __pycache__/
 ticket_pnr_*.pdf
