@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, request, session
 from database import Database
 from pprint import pprint
+from datetime import date
 
 app = Flask(__name__)
 app.secret_key = "dbmsminiproject"
@@ -61,7 +62,8 @@ def booktickets():
             passengerDetails['destination'] = destination
             passengerDetails['travel_date'] = travel_date
             return redirect("/home/trains")
-        return render_template("booktickets.html", stations=db.get_stations())
+        today = date.today()
+        return render_template("booktickets.html", stations=db.get_stations(), min_date="%d-%.2d-%.2d" % (today.year, today.month, today.day), max_date="%d-%.2d-%.2d" % (today.year + 1, today.month, today.day))
     return redirect('/login')
 
 

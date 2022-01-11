@@ -277,6 +277,10 @@ class Database:
             "no_of_stations": len([tr[2] for tr in trainDetails if trainNos[i] == tr[0]])
         } for i in range(len(trainNos))]
 
+    def get_todays_date(self):
+        today = date.today()
+        return "%d-%.2d-%.2d" % (today.year, today.month, today.day)
+
 
 # DATE_SUB(CURDATE(), INTERVAL 1 DAY)
 
