@@ -105,7 +105,7 @@ def addpassengers():
                 'p_name': name,
                 'p_age': age
             })
-        return render_template("addpassengers.html", passengers=passengerDetails['passengers'], user_name=userName)
+        return render_template("addpassengers.html", passengers=passengerDetails['passengers'], user_name=userName, noOfpassg=len(passengerDetails['passengers']))
     return redirect("/login")
 
 
