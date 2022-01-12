@@ -146,7 +146,7 @@ class Database:
         self.__cursor.execute("SELECT stat_name FROM stations")
         return [station[0] for station in self.__cursor.fetchall()]
 
-    def get_trains(self, sourceName, destinationName):
+    def get_trains(self, sourceName, destinationName, travelDate):
         trains_list = []
         self.__cursor.execute(
             f"""
@@ -158,6 +158,15 @@ class Database:
         self.__cursor.execute('SELECT train_no FROM trains')
         train_nos = self.__cursor.fetchall()
         for trainNo in train_nos:
+            self.__cursor.execute(f"""
+            SELECT SUM(no_of_seats)
+            FROM available_seats
+            WHERE train_no = {trainNo[0]} AND travel_date = '{travelDate}';
+            """)
+            noOfSeatsReserved = self.__cursor.fetchall()
+            noOfSeatsReserved = noOfSeatsReserved[0][0] if noOfSeatsReserved[0][0] else 0
+            print(
+                f"\n\n\n{noOfSeatsReserved}, {type(noOfSeatsReserved)}, {travelDate}\n\n\n")
             self.__cursor.execute(
                 f"""SELECT seq_no, arrival_time
                 FROM covers
@@ -190,6 +199,7 @@ class Database:
                     "arrival_time": self.convert_time_format(arrivalTime),
                     "departure_time": self.convert_time_format(departureTime),
                     "reaching_time": self.convert_time_format(reachingTime),
+                    "seats_available": 1000 - noOfSeatsReserved,
                     "price": self.__price,
                 })
         return trains_list
@@ -220,7 +230,24 @@ class Database:
         """)
 
         pnr = int(self.__cursor.fetchall()[0][0])
-        seat_no = randint(1, 500)
+
+        self.__cursor.execute(f"""
+        SELECT train_no
+        FROM tickets
+        WHERE pnr = {pnr}
+        """)
+
+        trainNo = self.__cursor.fetchall()[0][0]
+
+        self.__cursor.execute(f"""
+            SELECT SUM(no_of_seats)
+            FROM available_seats
+            WHERE train_no = {trainNo} AND travel_date = '{passengerDetails["travel_date"]}';
+            """)
+        noOfSeatsReserved = self.__cursor.fetchall()
+        noOfSeatsReserved = noOfSeatsReserved[0][0] if noOfSeatsReserved[0][0] else 0
+
+        seat_no = noOfSeatsReserved + 1
         self.__totalPrice = 0
 
         for passenger in passengerDetails['passengers']:

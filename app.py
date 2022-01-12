@@ -81,7 +81,7 @@ def get_all_trains_info():
 def trains():
     global passengerDetails
     if session['user_id']:
-        return render_template("trains.html", trains=db.get_trains(passengerDetails['source'], passengerDetails['destination']), user_name=userName)
+        return render_template("trains.html", trains=db.get_trains(passengerDetails['source'], passengerDetails['destination'], passengerDetails['travel_date']), user_name=userName)
     return redirect('/login')
 
 
