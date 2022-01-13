@@ -1,6 +1,5 @@
 from flask import Flask, render_template, redirect, request, session
 from database import Database
-from pprint import pprint
 from datetime import date
 
 app = Flask(__name__)
@@ -8,7 +7,6 @@ app.secret_key = "dbmsminiproject"
 
 db = Database()
 passengerDetails = {}
-userName: str
 
 
 @app.route('/')
@@ -18,13 +16,13 @@ def redirect_pg():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    global userName
     session["user_id"] = None
+    session["user_name"] = None
     if request.method == 'POST':
         if db.does_user_exist([request.form.get('username'), request.form.get('password')]):
             session["user_id"] = db.get_user_id_by_user_name(
                 request.form.get('username'))
-            userName = request.form.get('username').title()
+            session["user_name"] = request.form.get('username').title()
             return redirect('/home')
         else:
             return render_template("index.html", status=False)
@@ -35,9 +33,7 @@ def login():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        response = db.add_user([request.form.get('username'),
-                                request.form.get('email'),
-                                request.form.get('password')])
+        response = db.add_user(request.form)
         return redirect('/login', code=302) if response else render_template("signup.html", status=response)
     else:
         return render_template("signup.html", status=True)
@@ -45,12 +41,12 @@ def signup():
 
 @app.route("/home")
 def home():
-    return render_template("home.html", user_name=userName) if session['user_id'] else redirect('/login', code=302)
+    return render_template("home.html", user_name=session["user_name"]) if session['user_id'] else redirect('/login', code=302)
 
 
 @app.route("/home/viewtickets")
 def viewtickets():
-    return render_template("tickets.html", tickets=db.get_tickets(session['user_id']), user_name=userName) if session['user_id'] else redirect('/login')
+    return render_template("tickets.html", tickets=db.get_tickets(session['user_id']), user_name=session["user_name"]) if session['user_id'] else redirect('/login')
 
 
 @app.route("/home/booktickets", methods=["GET", "POST"])
@@ -68,20 +64,20 @@ def booktickets():
         today = date.today()
         min = "%d-%.2d-%.2d" % (today.year, today.month, today.day)
         max = "%d-%.2d-%.2d" % (today.year + 1, today.month, today.day)
-        return render_template("booktickets.html", stations=db.get_stations(), min_date=min, max_date=max, user_name=userName)
+        return render_template("booktickets.html", stations=db.get_stations(), min_date=min, max_date=max, user_name=session["user_name"])
     return redirect('/login')
 
 
 @app.route('/home/getalltrainsinfo')
 def get_all_trains_info():
-    return render_template("trainsinfo.html", trainsinfo=db.get_train_details(), user_name=userName) if session['user_id'] else redirect("/login")
+    return render_template("trainsinfo.html", trainsinfo=db.get_train_details(), user_name=session["user_name"]) if session['user_id'] else redirect("/login")
 
 
 @app.route("/home/trains")
 def trains():
     global passengerDetails
     if session['user_id']:
-        return render_template("trains.html", trains=db.get_trains(passengerDetails['source'], passengerDetails['destination'], passengerDetails['travel_date']), user_name=userName)
+        return render_template("trains.html", trains=db.get_trains(passengerDetails['source'], passengerDetails['destination'], passengerDetails['travel_date']), user_name=session['user_name'])
     return redirect('/login')
 
 
@@ -105,7 +101,7 @@ def addpassengers():
                 'p_name': name,
                 'p_age': age
             })
-        return render_template("addpassengers.html", passengers=passengerDetails['passengers'], user_name=userName, noOfpassg=len(passengerDetails['passengers']))
+        return render_template("addpassengers.html", passengers=passengerDetails['passengers'], user_name=session["user_name"], noOfpassg=len(passengerDetails['passengers']))
     return redirect("/login")
 
 
@@ -130,15 +126,14 @@ def payment():
     if session['user_id']:
         if request.method == 'POST':
             return redirect('/home/reserveticket')
-        return render_template("payment.html", amount=db.get_totalprice(passengerDetails), user_name=userName)
+        return render_template("payment.html", amount=db.get_totalprice(passengerDetails), user_name=session["user_name"])
     return redirect("/login")
 
 
 @app.route("/signout")
 def signout():
-    global userName
     session['user_id'] = None
-    userName = ""
+    session["user_name"] = None
     return redirect('/login')
 
 

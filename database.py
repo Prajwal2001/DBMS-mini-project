@@ -1,9 +1,7 @@
 import hashlib
 import mysql.connector
 import yaml
-from pprint import pprint
 from datetime import timedelta, date, datetime
-from random import randint
 from mail_generator import ticket_mail
 from ticket_pdf_generator import generate_ticket_pdf
 from time import sleep
@@ -27,14 +25,12 @@ class Database:
 
         self.__cursor = self.__mydb.cursor()
 
-    def add_user(self, user: list):
+    def add_user(self, user: dict):
         """Adds a user_id to the database, by accepting a list consisting of username, password and email.
         And returns the updated table values in a list of key value pairs"""
-        u_name, email, password = user
-
         try:
             self.__cursor.execute(
-                f"INSERT iNTO users VALUES (null, '{u_name}', '{email}', '{hashlib.md5(password.encode()).hexdigest()}')")
+                f"INSERT iNTO users VALUES (null, '{user['username']}', '{user['email']}', '{hashlib.md5(user['password'].encode()).hexdigest()}')")
         except mysql.connector.errors.IntegrityError:
             return None
 
@@ -165,8 +161,6 @@ class Database:
             """)
             noOfSeatsReserved = self.__cursor.fetchall()
             noOfSeatsReserved = noOfSeatsReserved[0][0] if noOfSeatsReserved[0][0] else 0
-            print(
-                f"\n\n\n{noOfSeatsReserved}, {type(noOfSeatsReserved)}, {travelDate}\n\n\n")
             self.__cursor.execute(
                 f"""SELECT seq_no, arrival_time
                 FROM covers
@@ -240,21 +234,20 @@ class Database:
         trainNo = self.__cursor.fetchall()[0][0]
 
         self.__cursor.execute(f"""
-            SELECT SUM(no_of_seats)
+            SELECT MAX(seats_reserved)
             FROM available_seats
             WHERE train_no = {trainNo} AND travel_date = '{passengerDetails["travel_date"]}';
             """)
-        noOfSeatsReserved = self.__cursor.fetchall()
-        noOfSeatsReserved = noOfSeatsReserved[0][0] if noOfSeatsReserved[0][0] else 0
+        seatsReserved = self.__cursor.fetchall()
+        seatsReserved = seatsReserved[0][0] if seatsReserved[0][0] else 0
 
-        seat_no = noOfSeatsReserved + 1
+        seat_no = seatsReserved + 1
         self.__totalPrice = 0
 
         for passenger in passengerDetails['passengers']:
             self.__cursor.execute(
                 f"""INSERT INTO passengers VALUES (null, '{passenger['p_name']}', {passenger['p_age']}, {seat_no}, {pnr})""")
             self.__totalPrice += self.__price
-            print("\n\n", self.__totalPrice)
             seat_no += 1
         self.__cursor.execute(
             f"""UPDATE tickets SET price={self.__totalPrice} WHERE pnr={pnr}""")
@@ -269,7 +262,7 @@ class Database:
         tickets = self.get_tickets(userData[0][0])
         ticket = [i for i in tickets if i["pnr"] == pnr][0]
         fileName = generate_ticket_pdf(ticket)
-        sleep(3)
+        sleep(1)
         ticket_mail(userData[0][2], userData[0][1], fileName, pnr)
 
     def cancel_ticket(self, pnr):
