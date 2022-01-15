@@ -33,6 +33,22 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Temporary view structure for view `available_seats`
+--
+
+DROP TABLE IF EXISTS `available_seats`;
+/*!50001 DROP VIEW IF EXISTS `available_seats`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `available_seats` AS SELECT 
+ 1 AS `pnr`,
+ 1 AS `travel_date`,
+ 1 AS `train_no`,
+ 1 AS `no_of_seats`,
+ 1 AS `seats_reserved`*/;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `covers`
 --
 
@@ -77,7 +93,7 @@ CREATE TABLE `passengers` (
   PRIMARY KEY (`p_id`),
   KEY `pnr` (`pnr`),
   CONSTRAINT `passengers_ibfk_1` FOREIGN KEY (`pnr`) REFERENCES `tickets` (`pnr`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=180 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -85,7 +101,7 @@ CREATE TABLE `passengers` (
 --
 
 /*!40000 ALTER TABLE `passengers` DISABLE KEYS */;
-INSERT INTO `passengers` VALUES (118,'Prajwal',21,365,558),(119,'Parashuram',52,366,558),(120,'Veena',46,367,558),(121,'Shreesha S',21,173,559),(122,'Prajwal Kulkarni',21,174,559),(128,'Prajwal Kulkarni',21,1,562),(129,'Prajwal G',20,2,562),(137,'Veena',46,425,567),(138,'Bhoomika Kulkarni',11,426,567),(139,'Prajwal',21,387,568);
+INSERT INTO `passengers` VALUES (174,'Parashuram',52,3,588),(175,'Veena',46,4,588),(176,'Prajwal',21,1,589),(177,'Parashuram',52,2,589),(178,'Veena',46,5,590),(179,'Parashuram',52,6,590);
 /*!40000 ALTER TABLE `passengers` ENABLE KEYS */;
 
 --
@@ -136,7 +152,7 @@ CREATE TABLE `tickets` (
   CONSTRAINT `tickets_ibfk_2` FOREIGN KEY (`train_no`) REFERENCES `trains` (`train_no`) ON DELETE CASCADE,
   CONSTRAINT `tickets_ibfk_3` FOREIGN KEY (`from_station`) REFERENCES `stations` (`stat_id`) ON DELETE CASCADE,
   CONSTRAINT `tickets_ibfk_4` FOREIGN KEY (`to_station`) REFERENCES `stations` (`stat_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=569 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=591 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -144,7 +160,7 @@ CREATE TABLE `tickets` (
 --
 
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
-INSERT INTO `tickets` VALUES (558,200,206,'2022-01-10','2022-01-26',7,1003,180),(559,200,206,'2022-01-10','2022-01-20',8,1003,120),(562,200,205,'2022-01-10','2022-01-20',9,1003,100),(567,201,206,'2022-01-11','2022-01-20',6,1003,100),(568,200,203,'2022-01-11','2022-01-20',6,1000,30);
+INSERT INTO `tickets` VALUES (588,200,204,'2022-01-13','2022-01-21',6,1000,80),(589,200,203,'2022-01-13','2022-01-31',6,1000,60),(590,200,205,'2022-01-13','2022-01-21',6,1000,100);
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 
 --
@@ -184,7 +200,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_name` (`user_name`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,7 +208,7 @@ CREATE TABLE `users` (
 --
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (6,'prajwal k','kulkarniprajwal.01@gmail.com','e99a18c428cb38d5f260853678922e03'),(7,'parashuram','kulkarniparashuram@gmail.com','e99a18c428cb38d5f260853678922e03'),(8,'Shreesha S','shreesha.082@gmail.com','e99a18c428cb38d5f260853678922e03'),(9,'Prajwal G','prajwalvallabha06@gmail.com','e99a18c428cb38d5f260853678922e03');
+INSERT INTO `users` VALUES (6,'prajwal k','kulkarniprajwal.01@gmail.com','e99a18c428cb38d5f260853678922e03'),(7,'parashuram','kulkarniparashuram@gmail.com','e99a18c428cb38d5f260853678922e03'),(8,'Shreesha S','shreesha.082@gmail.com','e99a18c428cb38d5f260853678922e03'),(9,'Prajwal G','prajwalvallabha06@gmail.com','e99a18c428cb38d5f260853678922e03'),(10,'sakshi k','sakshiak111@gmail.com','e99a18c428cb38d5f260853678922e03'),(11,'abcde','abcd@gmail.com','e99a18c428cb38d5f260853678922e03');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 --
@@ -212,6 +228,24 @@ INSERT INTO `users` VALUES (6,'prajwal k','kulkarniprajwal.01@gmail.com','e99a18
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `available_seats`
+--
+
+/*!50001 DROP VIEW IF EXISTS `available_seats`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `available_seats` AS select `t`.`pnr` AS `pnr`,`t`.`travel_date` AS `travel_date`,`tr`.`train_no` AS `train_no`,count(`p`.`p_id`) AS `no_of_seats`,max(`p`.`seat_no`) AS `seats_reserved` from (`trains` `tr` left join (`tickets` `t` join `passengers` `p` on((`t`.`pnr` = `p`.`pnr`))) on((`t`.`train_no` = `tr`.`train_no`))) group by `t`.`pnr` order by `t`.`pnr` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -222,4 +256,4 @@ INSERT INTO `users` VALUES (6,'prajwal k','kulkarniprajwal.01@gmail.com','e99a18
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-12 13:37:08
+-- Dump completed on 2022-01-15 17:24:33
