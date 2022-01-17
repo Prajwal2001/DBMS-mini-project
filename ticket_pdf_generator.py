@@ -37,7 +37,7 @@ def generate_ticket_pdf(ticket: dict):
         ticket["reaching_time"]), fill=text_color, font=font)
     d.text(reach_date_loc, str(
         ticket["reaching_date"]), fill=text_color, font=font)
-    d.text(price_loc, str(ticket["price"]) + "₹", fill=text_color, font=font)
+    d.text(price_loc, "₹" + str(ticket["price"]), fill=text_color, font=font)
     d.text(booking_date_loc, str(
         ticket["booking_date"]), fill=text_color, font=font)
 

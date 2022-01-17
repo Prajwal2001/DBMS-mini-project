@@ -16,8 +16,8 @@ def redirect_pg():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    session["user_id"] = None
-    session["user_name"] = None
+    session["user_id"] = ""
+    session["user_name"] = ""
     if request.method == 'POST':
         if db.does_user_exist([request.form.get('username'), request.form.get('password')]):
             session["user_id"] = db.get_user_id_by_user_name(
