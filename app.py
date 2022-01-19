@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, flash
 from database import Database
 from datetime import date
 
@@ -77,7 +77,11 @@ def get_all_trains_info():
 def trains():
     global passengerDetails
     if session.get("user_id"):
-        return render_template("trains.html", trains=db.get_trains(passengerDetails['source'], passengerDetails['destination'], passengerDetails['travel_date']), user_name=session['user_name'])
+        if passengerDetails["source"] in db.get_stations() and passengerDetails["destination"] in db.get_stations():
+            return render_template("trains.html", trains=db.get_trains(passengerDetails['source'], passengerDetails['destination'], passengerDetails['travel_date']), user_name=session['user_name'])
+        else:
+            flash("Please enter proper source or destination!", "error")
+            return redirect("/home/booktickets")
     return redirect('/login')
 
 

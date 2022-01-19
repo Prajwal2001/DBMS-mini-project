@@ -13,11 +13,18 @@
     </div>
     <br>
     <form action="/home/booktickets" method="post" id="book-tkts">
+        {% with messages = get_flashed_messages((error)) %}
+        {% if messages %}
+        {% for message in messages %}
+        <h6 style='color:"red";'>{{ message }}</h6>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-4">
                 <label for="browser" class="col-form-label">Source:</label>
-                <input list="browsers" name="source" id="browser" class="form-control" required>
+                <input list="browsers" name="source" id="browser" class="form-control" autocomplete="off" required>
 
                 <datalist id="browsers">
                     {% for station in stations %}
@@ -27,7 +34,7 @@
             </div>
             <div class="col-md-4">
                 <label for="browser" class="col-form-label">Destination:</label>
-                <input list="browsers" name="destination" id="browser" class="form-control" required>
+                <input list="browsers" name="destination" id="browser" class="form-control" autocomplete="off" required>
 
                 <datalist id="browsers">
                     {% for station in stations %}
