@@ -77,11 +77,7 @@ def get_all_trains_info():
 def trains():
     global passengerDetails
     if session.get("user_id"):
-        if passengerDetails["source"] in db.get_stations() and passengerDetails["destination"] in db.get_stations():
-            return render_template("trains.html", trains=db.get_trains(passengerDetails['source'], passengerDetails['destination'], passengerDetails['travel_date']), user_name=session['user_name'])
-        else:
-            flash("Please enter proper source or destination!", "error")
-            return redirect("/home/booktickets")
+        return render_template("trains.html", trains=db.get_trains(passengerDetails['source'], passengerDetails['destination'], passengerDetails['travel_date']), user_name=session['user_name'])
     return redirect('/login')
 
 

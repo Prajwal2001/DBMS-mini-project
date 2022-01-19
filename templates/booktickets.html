@@ -24,7 +24,8 @@
             <div class="col-md-2"></div>
             <div class="col-md-4">
                 <label for="browser" class="col-form-label">Source:</label>
-                <input list="browsers" name="source" id="browser" class="form-control" autocomplete="off" required>
+                <input list="browsers" name="source" id="browser" class="form-control" autocomplete="off"
+                    pattern="{{ '|'.join(stations) }}" required>
 
                 <datalist id="browsers">
                     {% for station in stations %}
@@ -34,7 +35,8 @@
             </div>
             <div class="col-md-4">
                 <label for="browser" class="col-form-label">Destination:</label>
-                <input list="browsers" name="destination" id="browser" class="form-control" autocomplete="off" required>
+                <input list="browsers" name="destination" id="browser" class="form-control" autocomplete="off"
+                    pattern="{{ '|'.join(stations) }}" required>
 
                 <datalist id="browsers">
                     {% for station in stations %}
