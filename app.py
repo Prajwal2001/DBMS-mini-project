@@ -54,12 +54,9 @@ def booktickets():
     global passengerDetails
     if session.get("user_id"):
         if request.method == 'POST':
-            source = request.form.get('source')
-            destination = request.form.get('destination')
-            travel_date = request.form.get('travel_date')
-            passengerDetails['source'] = source
-            passengerDetails['destination'] = destination
-            passengerDetails['travel_date'] = travel_date
+            passengerDetails['source'] = request.form.get('source')
+            passengerDetails['destination'] = request.form.get('destination')
+            passengerDetails['travel_date'] = request.form.get('travel_date')
             return redirect("/home/trains")
         today = date.today()
         min = "%d-%.2d-%.2d" % (today.year, today.month, today.day)
