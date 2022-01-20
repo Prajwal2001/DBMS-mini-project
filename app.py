@@ -19,7 +19,7 @@ def login():
     session["user_id"] = ""
     session["user_name"] = ""
     if request.method == 'POST':
-        if db.does_user_exist([request.form.get('username'), request.form.get('password')]):
+        if db.does_user_exist(request.form):
             session["user_id"] = db.get_user_id_by_user_name(
                 request.form.get('username'))
             session["user_name"] = request.form.get('username').title()
@@ -74,7 +74,7 @@ def get_all_trains_info():
 def trains():
     global passengerDetails
     if session.get("user_id"):
-        return render_template("trains.html", trains=db.get_trains(passengerDetails['source'], passengerDetails['destination'], passengerDetails['travel_date']), user_name=session['user_name'])
+        return render_template("trains.html", trains=db.get_trains(passengerDetails), user_name=session['user_name'])
     return redirect('/login')
 
 
