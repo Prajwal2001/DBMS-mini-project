@@ -65,16 +65,19 @@ class Database:
         return res[0][0] if res else None
 
     def convert_date_format(self, date: date):
+        """Returns given date in dd-mm-yyyy format"""
         date = str(date).split('-')
         return f"{date[-1]}-{date[-2]}-{date[-3]}"
 
     def calculate_reaching_date(self, days: int, travellingDate):
+        """Adds the given number of day to given date and returns date in dd-mm-yyyy format"""
         temp = travellingDate.split('-')
         travellingDate = date(int(temp[2]), int(temp[1]), int(temp[0]))
         travellingDate = travellingDate + timedelta(int(days))
         return self.convert_date_format(travellingDate)
 
     def convert_time_format(self, time):
+        """Returns given time in hh:mm:ss format"""
         hours = time.seconds//3600
         mins = (time.seconds % 3600)//60
         return "%.2d:%.2d:00" % (hours, mins)
@@ -139,10 +142,12 @@ class Database:
         return ticketsList
 
     def get_stations(self):
+        """Returns all the stations in the database"""
         self.__cursor.execute("SELECT stat_name FROM stations")
         return [station[0] for station in self.__cursor.fetchall()]
 
     def get_trains(self, travelDetails: dict):
+        """Returns list of trains for given source, destination and travel date"""
         trainsList = []
         self.__cursor.execute(
             f"""
@@ -199,6 +204,7 @@ class Database:
         return trainsList
 
     def add_passengers_ticket(self, passengerDetails: dict):
+        """Adds given passengers to the ticket and creates PDF of the ticket and mails the same"""
         self.__cursor.execute(f"""
         SELECT A.stat_id, B.stat_id
         FROM stations A, stations B
@@ -266,9 +272,11 @@ class Database:
         ticket_mail(userData[0][2], userData[0][1], fileName, pnr)
 
     def cancel_ticket(self, pnr: int):
+        """Cancels the ticket for given PNR"""
         self.__cursor.execute(f"""DELETE FROM tickets WHERE pnr = {pnr}""")
 
     def get_totalprice(self, passenger_details: dict):
+        """Returns total price for a ticket"""
         price = 0
         for _ in passenger_details['passengers']:
             price += self.__price
@@ -276,6 +284,7 @@ class Database:
         return price
 
     def get_train_details(self):
+        """Returns list of all trains available and stations they cover"""
         self.__cursor.callproc("trains_info")
         for result in self.__cursor.stored_results():
             trainDetails = result.fetchall()
