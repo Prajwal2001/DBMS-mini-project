@@ -5,12 +5,14 @@ from datetime import timedelta, date, datetime
 from mail_generator import ticket_mail
 from ticket_pdf_generator import generate_ticket_pdf
 from time import sleep
+from database_creator import create_database
 
 
 class Database:
     """Used to connect Database"""
 
     def __init__(self):
+        create_database()
         with open('./credentials.yaml') as f:
             self.__data = yaml.load(f, Loader=yaml.FullLoader)
         self.__mydb = mysql.connector.connect(
@@ -20,6 +22,7 @@ class Database:
             database=self.__data["database"],
             autocommit=True
         )
+
         self.__price = 0
         self.__totalPrice = 0
 
@@ -267,9 +270,9 @@ class Database:
         userData = self.__cursor.fetchall()
         tickets = self.get_tickets(userData[0][0])
         ticket = [i for i in tickets if i["pnr"] == pnr][0]
-        fileName = generate_ticket_pdf(ticket)
-        sleep(1)
-        ticket_mail(userData[0][2], userData[0][1], fileName, pnr)
+        # fileName = generate_ticket_pdf(ticket)
+        # sleep(1)
+        # ticket_mail(userData[0][2], userData[0][1], fileName, pnr)
 
     def cancel_ticket(self, pnr: int):
         """Cancels the ticket for given PNR"""
