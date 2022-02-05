@@ -93,7 +93,7 @@ CREATE TABLE `passengers` (
   PRIMARY KEY (`p_id`),
   KEY `pnr` (`pnr`),
   CONSTRAINT `passengers_ibfk_1` FOREIGN KEY (`pnr`) REFERENCES `tickets` (`pnr`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=180 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=194 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +101,7 @@ CREATE TABLE `passengers` (
 --
 
 /*!40000 ALTER TABLE `passengers` DISABLE KEYS */;
-INSERT INTO `passengers` VALUES (174,'Parashuram',52,3,588),(175,'Veena',46,4,588),(176,'Prajwal',21,1,589),(177,'Parashuram',52,2,589),(178,'Veena',46,5,590),(179,'Parashuram',52,6,590);
+INSERT INTO `passengers` VALUES (184,'Prajwal Kulkarni',21,1,593),(185,'Bhoomika Kulkarni',11,2,593),(188,'Prajwal Kulkarni',21,1,595),(189,'Bhoomika Kulkarni',11,2,595),(190,'Parashuram Kulkarni',56,3,596),(191,'Veena Kulkarni',46,4,596),(192,'Prajwal Kulkarni',21,5,596),(193,'Bhoomika Kulkarni',11,6,596);
 /*!40000 ALTER TABLE `passengers` ENABLE KEYS */;
 
 --
@@ -116,7 +116,7 @@ CREATE TABLE `stations` (
   `stat_name` varchar(25) NOT NULL,
   `stat_loc` varchar(25) NOT NULL,
   PRIMARY KEY (`stat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=209 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,7 +152,7 @@ CREATE TABLE `tickets` (
   CONSTRAINT `tickets_ibfk_2` FOREIGN KEY (`train_no`) REFERENCES `trains` (`train_no`) ON DELETE CASCADE,
   CONSTRAINT `tickets_ibfk_3` FOREIGN KEY (`from_station`) REFERENCES `stations` (`stat_id`) ON DELETE CASCADE,
   CONSTRAINT `tickets_ibfk_4` FOREIGN KEY (`to_station`) REFERENCES `stations` (`stat_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=591 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=597 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,7 +160,7 @@ CREATE TABLE `tickets` (
 --
 
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
-INSERT INTO `tickets` VALUES (588,200,204,'2022-01-13','2022-01-21',6,1000,80),(589,200,203,'2022-01-13','2022-01-31',6,1000,60),(590,200,205,'2022-01-13','2022-01-21',6,1000,100);
+INSERT INTO `tickets` VALUES (593,200,206,'2022-01-20','2022-01-27',6,1000,120),(595,200,201,'2022-02-03','2022-02-17',6,1000,20),(596,200,204,'2022-02-04','2022-02-17',6,1000,160);
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 
 --
@@ -256,4 +256,4 @@ INSERT INTO `users` VALUES (6,'prajwal k','kulkarniprajwal.01@gmail.com','e99a18
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-15 17:24:33
+-- Dump completed on 2022-02-04 13:55:14
