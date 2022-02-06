@@ -270,9 +270,9 @@ class Database:
         userData = self.__cursor.fetchall()
         tickets = self.get_tickets(userData[0][0])
         ticket = [i for i in tickets if i["pnr"] == pnr][0]
-        # fileName = generate_ticket_pdf(ticket)
-        # sleep(1)
-        # ticket_mail(userData[0][2], userData[0][1], fileName, pnr)
+        fileName = generate_ticket_pdf(ticket)
+        sleep(1)
+        ticket_mail(userData[0][2], userData[0][1], fileName, pnr)
 
     def cancel_ticket(self, pnr: int):
         """Cancels the ticket for given PNR"""
