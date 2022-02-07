@@ -291,20 +291,16 @@ class Database:
         self.__cursor.callproc("trains_info")
         for result in self.__cursor.stored_results():
             trainDetails = result.fetchall()
-        trainNos = []
-        for tr in [train[0] for train in trainDetails]:
-            if tr not in trainNos:
-                trainNos.append(tr)
-        trainNames = []
-        for tr in [train[1] for train in trainDetails]:
-            if tr not in trainNames:
-                trainNames.append(tr)
+        self.__cursor.execute(f"""
+        SELECT * FROM
+        trains""")
+        trains = self.__cursor.fetchall()
 
         return [{
-            "train_no": trainNos[i],
-            "train_name": trainNames[i],
-            "stations_list": [tr[2] for tr in trainDetails if trainNos[i] == tr[0]],
-            "arrival_times": [self.convert_time_format(tr[3]) for tr in trainDetails if trainNos[i] == tr[0]],
-            "depart_times": [self.convert_time_format(tr[4]) for tr in trainDetails if trainNos[i] == tr[0]],
-            "no_of_stations": len([tr[2] for tr in trainDetails if trainNos[i] == tr[0]])
-        } for i in range(len(trainNos))]
+            "train_no": train[0],
+            "train_name": train[1],
+            "stations_list": [tr[1] for tr in trainDetails if train[0] == tr[0]],
+            "arrival_times": [self.convert_time_format(tr[2]) for tr in trainDetails if train[0] == tr[0]],
+            "depart_times": [self.convert_time_format(tr[3]) for tr in trainDetails if train[0] == tr[0]],
+            "no_of_stations": len([tr[1] for tr in trainDetails if train[0] == tr[0]])
+        } for train in trains]
