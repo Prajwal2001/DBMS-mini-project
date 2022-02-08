@@ -160,19 +160,21 @@ class Database:
                 B.stat_name = '{travelDetails['destination']}';""")
         source, destination = self.__cursor.fetchall()[0]
         self.__cursor.execute('SELECT train_no FROM trains')
-        train_nos = self.__cursor.fetchall()
-        for trainNo in train_nos:
+        trainNos = self.__cursor.fetchall()
+        for trainNo in trainNos:
             self.__cursor.execute(f"""
             SELECT SUM(no_of_seats)
             FROM available_seats
-            WHERE train_no = {trainNo[0]} AND travel_date = '{travelDetails['travel_date']}';
+            WHERE train_no = {trainNo[0]} AND 
+                travel_date = '{travelDetails['travel_date']}';
             """)
             noOfSeatsReserved = self.__cursor.fetchall()
             noOfSeatsReserved = noOfSeatsReserved[0][0] if noOfSeatsReserved[0][0] else 0
             self.__cursor.execute(
                 f"""SELECT seq_no, arrival_time
                 FROM covers
-                WHERE train_no = {trainNo[0]} AND stat_id = {destination};""")
+                WHERE train_no = {trainNo[0]} AND 
+                    stat_id = {destination};""")
             destData = self.__cursor.fetchall()
             if destData:
                 destSeqno, reachingTime = destData[0]

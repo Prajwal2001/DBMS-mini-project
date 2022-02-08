@@ -74,7 +74,7 @@ CREATE TABLE `covers` (
 --
 
 /*!40000 ALTER TABLE `covers` DISABLE KEYS */;
-INSERT INTO `covers` VALUES (200,1000,'00:30:00','00:31:00',0,1),(201,1000,'01:00:00','01:01:00',0,2),(202,1000,'02:00:00','02:01:00',0,3),(203,1000,'03:00:00','03:01:00',0,4),(204,1000,'04:00:00','04:01:00',0,5),(205,1000,'05:00:00','05:01:00',0,6),(206,1000,'06:00:00','06:01:00',0,7),(208,1002,'08:00:00','08:01:00',0,1),(206,1002,'09:00:00','09:01:00',0,2),(205,1002,'10:00:00','10:01:00',0,3),(203,1002,'11:00:00','11:01:00',0,4),(202,1002,'12:00:00','12:01:00',0,5),(201,1002,'13:00:00','13:01:00',0,6),(200,1002,'14:00:00','14:01:00',0,7),(200,1003,'20:00:00','20:01:00',0,1),(201,1003,'21:00:00','21:01:00',0,2),(202,1003,'22:00:00','22:01:00',0,3),(203,1003,'23:00:00','23:01:00',0,4),(204,1003,'00:00:00','00:01:00',1,5),(205,1003,'01:00:00','01:01:00',1,6),(206,1003,'02:00:00','02:01:00',1,7);
+INSERT INTO `covers` VALUES (210,1000,'05:30:00','06:00:00',0,1),(211,1000,'06:12:00','06:20:00',0,2),(212,1000,'07:02:00','07:10:00',0,3),(213,1000,'08:15:00','08:20:00',0,4),(214,1000,'10:15:00','10:20:00',0,5),(215,1000,'10:27:00','10:30:00',0,6),(216,1000,'10:48:00','10:55:00',0,7),(217,1000,'12:00:00','12:30:00',0,8),(210,1001,'21:30:00','22:05:00',0,1),(211,1001,'22:17:00','22:20:00',0,2),(212,1001,'23:07:00','23:10:00',0,3),(213,1001,'00:30:00','00:35:00',1,4),(214,1001,'02:35:00','02:40:00',1,5),(215,1001,'02:55:00','03:00:00',1,6),(216,1001,'03:15:00','03:20:00',1,7),(217,1001,'05:45:00','06:15:00',1,8),(217,1002,'13:00:00','13:40:00',0,1),(216,1002,'15:07:00','15:09:00',0,2),(215,1002,'15:29:00','15:31:00',0,3),(214,1002,'15:45:00','15:47:00',0,4),(213,1002,'17:45:00','17:50:00',0,5),(212,1002,'19:08:00','19:10:00',0,6),(211,1002,'20:15:00','20:17:00',0,7),(210,1002,'21:00:00','21:30:00',0,8),(217,1003,'22:20:00','22:30:00',0,1),(216,1003,'00:08:00','00:10:00',1,2),(215,1003,'00:29:00','00:31:00',1,3),(214,1003,'00:48:00','00:50:00',1,4),(213,1003,'03:03:00','03:05:00',1,5),(212,1003,'04:28:00','04:30:00',1,6),(211,1003,'05:50:00','05:52:00',1,7),(210,1003,'06:30:00','06:45:00',1,8),(210,1004,'18:00:00','18:05:00',0,1),(219,1004,'18:14:00','18:16:00',0,2),(220,1004,'18:26:00','18:28:00',0,3),(221,1004,'18:32:00','18:34:00',0,4),(222,1004,'19:02:00','19:04:00',0,5),(223,1004,'19:51:00','19:55:00',0,6),(224,1004,'20:18:00','20:20:00',0,7),(225,1004,'21:10:00','21:30:00',0,8),(210,1005,'19:00:00','19:05:00',0,1),(219,1005,'19:14:00','19:16:00',0,2),(220,1005,'19:26:00','19:28:00',0,3),(221,1005,'19:32:00','19:34:00',0,4),(222,1005,'20:02:00','20:04:00',0,5),(223,1005,'20:51:00','20:55:00',0,6),(224,1005,'21:18:00','21:20:00',0,7),(225,1005,'22:10:00','22:30:00',0,8),(210,1006,'21:00:00','21:05:00',0,8),(219,1006,'21:14:00','21:16:00',0,7),(220,1006,'21:26:00','21:28:00',0,6),(221,1006,'21:32:00','21:34:00',0,5),(222,1006,'22:02:00','22:04:00',0,4),(223,1006,'22:51:00','22:55:00',0,3),(224,1006,'23:18:00','23:20:00',0,2),(225,1006,'00:10:00','00:30:00',1,1),(210,1007,'23:00:00','23:05:00',0,8),(219,1007,'23:14:00','23:16:00',0,7),(220,1007,'23:26:00','23:28:00',0,6),(221,1007,'23:32:00','23:34:00',0,5),(222,1007,'00:02:00','00:04:00',1,4),(223,1007,'00:51:00','00:55:00',1,3),(224,1007,'01:18:00','01:20:00',1,2),(225,1007,'02:10:00','02:30:00',1,1);
 /*!40000 ALTER TABLE `covers` ENABLE KEYS */;
 
 --
@@ -93,7 +93,7 @@ CREATE TABLE `passengers` (
   PRIMARY KEY (`p_id`),
   KEY `pnr` (`pnr`),
   CONSTRAINT `passengers_ibfk_1` FOREIGN KEY (`pnr`) REFERENCES `tickets` (`pnr`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=194 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +101,7 @@ CREATE TABLE `passengers` (
 --
 
 /*!40000 ALTER TABLE `passengers` DISABLE KEYS */;
-INSERT INTO `passengers` VALUES (184,'Prajwal Kulkarni',21,1,593),(185,'Bhoomika Kulkarni',11,2,593),(188,'Prajwal Kulkarni',21,1,595),(189,'Bhoomika Kulkarni',11,2,595),(190,'Parashuram Kulkarni',56,3,596),(191,'Veena Kulkarni',46,4,596),(192,'Prajwal Kulkarni',21,5,596),(193,'Bhoomika Kulkarni',11,6,596);
+INSERT INTO `passengers` VALUES (196,'Prajwal Kulkarni',21,1,598),(197,'Prajwal G',20,2,598),(198,'Parashuram',52,1,599),(199,'Veena',46,2,599);
 /*!40000 ALTER TABLE `passengers` ENABLE KEYS */;
 
 --
@@ -116,7 +116,7 @@ CREATE TABLE `stations` (
   `stat_name` varchar(25) NOT NULL,
   `stat_loc` varchar(25) NOT NULL,
   PRIMARY KEY (`stat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=226 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,7 +124,7 @@ CREATE TABLE `stations` (
 --
 
 /*!40000 ALTER TABLE `stations` DISABLE KEYS */;
-INSERT INTO `stations` VALUES (200,'A','A'),(201,'B','B'),(202,'C','C'),(203,'D','D'),(204,'E','E'),(205,'F','F'),(206,'G','G'),(207,'H','H'),(208,'I','I');
+INSERT INTO `stations` VALUES (210,'KSR Bengaluru','Bengaluru'),(211,'YPR Yesvantapur','Yesvantapur'),(212,'Tumkur','Tumkuru'),(213,'Arsikere Jn','Arsikere'),(214,'Davangere','Davangere'),(215,'Harihara','Harihara'),(216,'Ranibennur','RaniBennur'),(217,'Hubli Jn','Hubli'),(219,'Bengaluru Cant','Bengaluru Cant'),(220,'Baiyyappanahalli','Baiyyappanahalli'),(221,'KR Puram','KR Puram'),(222,'Malur','Malur'),(223,'Bangarpete','Bangarpete'),(224,'Champion','Champion Reef'),(225,'Oorgaum','Oorgaum');
 /*!40000 ALTER TABLE `stations` ENABLE KEYS */;
 
 --
@@ -152,7 +152,7 @@ CREATE TABLE `tickets` (
   CONSTRAINT `tickets_ibfk_2` FOREIGN KEY (`train_no`) REFERENCES `trains` (`train_no`) ON DELETE CASCADE,
   CONSTRAINT `tickets_ibfk_3` FOREIGN KEY (`from_station`) REFERENCES `stations` (`stat_id`) ON DELETE CASCADE,
   CONSTRAINT `tickets_ibfk_4` FOREIGN KEY (`to_station`) REFERENCES `stations` (`stat_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=597 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=600 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,7 +160,7 @@ CREATE TABLE `tickets` (
 --
 
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
-INSERT INTO `tickets` VALUES (593,200,206,'2022-01-20','2022-01-27',6,1000,120),(595,200,201,'2022-02-03','2022-02-17',6,1000,20),(596,200,204,'2022-02-04','2022-02-17',6,1000,160);
+INSERT INTO `tickets` VALUES (598,210,217,'2022-02-07','2022-02-16',6,1000,140),(599,210,213,'2022-02-07','2022-02-16',6,1001,60);
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 
 --
@@ -174,7 +174,7 @@ CREATE TABLE `trains` (
   `train_no` int NOT NULL AUTO_INCREMENT,
   `train_name` varchar(25) NOT NULL,
   PRIMARY KEY (`train_no`)
-) ENGINE=InnoDB AUTO_INCREMENT=1005 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1008 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,7 +182,7 @@ CREATE TABLE `trains` (
 --
 
 /*!40000 ALTER TABLE `trains` DISABLE KEYS */;
-INSERT INTO `trains` VALUES (1000,'A-train'),(1002,'C-train'),(1003,'B-train');
+INSERT INTO `trains` VALUES (1000,'Janshatabdi Express'),(1001,'Rani Chennamma Express'),(1002,'Janshatabdi Exp'),(1003,'Rani Chennamma'),(1004,'Lalbagh Express'),(1005,'Brindavan Express'),(1006,'Lalbagh Exp'),(1007,'Brindavan Exp');
 /*!40000 ALTER TABLE `trains` ENABLE KEYS */;
 
 --
@@ -256,4 +256,4 @@ INSERT INTO `users` VALUES (6,'prajwal k','kulkarniprajwal.01@gmail.com','e99a18
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-04 13:55:14
+-- Dump completed on 2022-02-08 11:25:29
