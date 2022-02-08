@@ -191,7 +191,10 @@ class Database:
                 noOfStats = destSeqno - sourceSeqno
                 self.__price = 10 * noOfStats
                 self.__cursor.execute(
-                    f"SELECT train_name FROM trains WHERE train_no = {trainNo[0]}")
+                    f"""
+                    SELECT train_name 
+                    FROM trains 
+                    WHERE train_no = {trainNo[0]}""")
                 trainName = self.__cursor.fetchall()[0][0]
                 trainsList.append({
                     "train_no": trainNo[0],
