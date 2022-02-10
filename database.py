@@ -224,7 +224,7 @@ class Database:
         travelDateList = str(passengerDetails['travel_date']).split('-')
 
         self.__cursor.execute(
-            f"""INSERT INTO tickets VALUES (null, {stations[0][0]}, {stations[0][1]}, '{datetime.today().year}-{datetime.today().month}-{datetime.today().day}', '{travelDateList[0]}-{travelDateList[1]}-{travelDateList[2]}', {passengerDetails['user_id']}, {passengerDetails['train_no']}, null)""")
+            f"""INSERT INTO tickets (from_station, to_station, travel_date, user_id, train_no, price) VALUES ({stations[0][0]}, {stations[0][1]}, '{travelDateList[0]}-{travelDateList[1]}-{travelDateList[2]}', {passengerDetails['user_id']}, {passengerDetails['train_no']}, null)""")
 
         self.__cursor.execute(f"""
         SELECT pnr
