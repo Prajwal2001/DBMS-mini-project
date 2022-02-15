@@ -6,6 +6,7 @@ from mail_generator import ticket_mail
 from ticket_pdf_generator import generate_ticket_pdf
 from time import sleep
 from database_creator import create_database
+from werkzeug.security import check_password_hash, generate_password_hash
 
 
 class Database:
@@ -33,7 +34,7 @@ class Database:
         And returns the updated table values in a list of key value pairs"""
         try:
             self.__cursor.execute(
-                f"INSERT iNTO users VALUES (null, '{user['username']}', '{user['email']}', '{hashlib.md5(user['password'].encode()).hexdigest()}')")
+                f"INSERT iNTO users VALUES (null, '{user['username']}', '{user['email']}', '{generate_password_hash(password=user['password'], salt_length=8)}')")
         except mysql.connector.errors.IntegrityError:
             return None
 
@@ -49,13 +50,14 @@ class Database:
     def does_user_exist(self, userData: dict):
         """Checks if the user_id exists in the database"""
         self.__cursor.execute(
-            f"""SELECT *
+            f"""SELECT password
                 FROM users
-                WHERE user_name = '{userData["username"]}' AND
-                password = '{hashlib.md5(userData["password"].encode()).hexdigest()}'"""
+                WHERE user_name = '{userData["username"]}'"""
         )
-        result = self.__cursor.fetchall()
-        return result
+        user = self.__cursor.fetchall()
+        if user:
+            user = check_password_hash(user[0][0], userData["password"])
+        return user
 
     def get_user_id_by_user_name(self, userName: str):
         """Returns user_id for given user_name"""
