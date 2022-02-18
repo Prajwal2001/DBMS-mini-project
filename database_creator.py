@@ -34,7 +34,7 @@ def create_database():
                 user_id int NOT NULL AUTO_INCREMENT,
                 user_name varchar(25) NOT NULL UNIQUE,
                 email varchar(30) NOT NULL UNIQUE,
-                password varchar(50) DEFAULT NULL,
+                password varchar(150) DEFAULT NULL,
                 PRIMARY KEY (user_id)
         )""")
 
