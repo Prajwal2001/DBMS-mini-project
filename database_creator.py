@@ -157,7 +157,7 @@ def create_database():
 
         cursor.execute("""CREATE PROCEDURE trains_info ()
                 BEGIN
-                SELECT train_no, train_name, stat_name, arrival_time, depart_time
+                SELECT train_no, stat_name, arrival_time, depart_time
                 FROM all_train_info
                 ORDER BY train_no, seq_no;
                 END""")
