@@ -1,4 +1,3 @@
-import hashlib
 import mysql.connector
 import yaml
 from datetime import timedelta, date, datetime
