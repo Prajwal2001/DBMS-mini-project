@@ -93,7 +93,7 @@ CREATE TABLE `passengers` (
   PRIMARY KEY (`p_id`),
   KEY `pnr` (`pnr`),
   CONSTRAINT `passengers_ibfk_1` FOREIGN KEY (`pnr`) REFERENCES `tickets` (`pnr`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=208 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +101,7 @@ CREATE TABLE `passengers` (
 --
 
 /*!40000 ALTER TABLE `passengers` DISABLE KEYS */;
-INSERT INTO `passengers` VALUES (196,'Prajwal Kulkarni',21,1,598),(197,'Prajwal G',20,2,598),(198,'Parashuram',52,1,599),(199,'Veena',46,2,599);
+INSERT INTO `passengers` VALUES (204,'Parashuram',52,1,603),(205,'Prajwal Kulkarni',21,1,604),(206,'Prajwal Kulkarni',21,2,604),(207,'Prajwal Kulkarni',21,1,605);
 /*!40000 ALTER TABLE `passengers` ENABLE KEYS */;
 
 --
@@ -138,7 +138,7 @@ CREATE TABLE `tickets` (
   `pnr` int NOT NULL AUTO_INCREMENT,
   `from_station` int NOT NULL,
   `to_station` int NOT NULL,
-  `booking_date` date NOT NULL,
+  `booking_date` date DEFAULT NULL,
   `travel_date` date NOT NULL,
   `user_id` int NOT NULL,
   `train_no` int NOT NULL,
@@ -152,7 +152,7 @@ CREATE TABLE `tickets` (
   CONSTRAINT `tickets_ibfk_2` FOREIGN KEY (`train_no`) REFERENCES `trains` (`train_no`) ON DELETE CASCADE,
   CONSTRAINT `tickets_ibfk_3` FOREIGN KEY (`from_station`) REFERENCES `stations` (`stat_id`) ON DELETE CASCADE,
   CONSTRAINT `tickets_ibfk_4` FOREIGN KEY (`to_station`) REFERENCES `stations` (`stat_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=600 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=606 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,8 +160,25 @@ CREATE TABLE `tickets` (
 --
 
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
-INSERT INTO `tickets` VALUES (598,210,217,'2022-02-07','2022-02-16',6,1000,140),(599,210,213,'2022-02-07','2022-02-16',6,1001,60);
+INSERT INTO `tickets` VALUES (603,210,215,'2022-02-15','2022-02-24',2,1000,50),(604,210,215,'2022-02-16','2022-02-18',2,1001,100),(605,210,215,'2022-02-16','2022-02-18',1,1000,50);
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `insert_booking_date` BEFORE INSERT ON `tickets` FOR EACH ROW begin 
+set new.booking_date = curdate();
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `trains`
@@ -182,7 +199,7 @@ CREATE TABLE `trains` (
 --
 
 /*!40000 ALTER TABLE `trains` DISABLE KEYS */;
-INSERT INTO `trains` VALUES (1000,'Janshatabdi Express'),(1001,'Rani Chennamma Express'),(1002,'Janshatabdi Exp'),(1003,'Rani Chennamma'),(1004,'Lalbagh Express'),(1005,'Brindavan Express'),(1006,'Lalbagh Exp'),(1007,'Brindavan Exp');
+INSERT INTO `trains` VALUES (1000,'Janshatabdi Express'),(1001,'Rani Chennamma Express'),(1002,'Janshatabdi Exp'),(1003,'Rani Chennamma Exp'),(1004,'Lalbagh Express'),(1005,'Brindavan Express'),(1006,'Lalbagh Exp'),(1007,'Brindavan Exp');
 /*!40000 ALTER TABLE `trains` ENABLE KEYS */;
 
 --
@@ -196,11 +213,11 @@ CREATE TABLE `users` (
   `user_id` int NOT NULL AUTO_INCREMENT,
   `user_name` varchar(25) NOT NULL,
   `email` varchar(30) NOT NULL,
-  `password` varchar(50) DEFAULT NULL,
+  `password` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_name` (`user_name`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,7 +225,7 @@ CREATE TABLE `users` (
 --
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (6,'prajwal k','kulkarniprajwal.01@gmail.com','e99a18c428cb38d5f260853678922e03'),(7,'parashuram','kulkarniparashuram@gmail.com','e99a18c428cb38d5f260853678922e03'),(8,'Shreesha S','shreesha.082@gmail.com','e99a18c428cb38d5f260853678922e03'),(9,'Prajwal G','prajwalvallabha06@gmail.com','e99a18c428cb38d5f260853678922e03'),(10,'sakshi k','sakshiak111@gmail.com','e99a18c428cb38d5f260853678922e03'),(11,'abcde','abcd@gmail.com','e99a18c428cb38d5f260853678922e03');
+INSERT INTO `users` VALUES (1,'prajwal k','kulkarniprajwal.01@gmail.com','pbkdf2:sha256:260000$n9SfKoGZ$9f918c785fbb3087dd45dc3a7fd57779789c24e6ce6aac76eba2cf3b75302a70'),(2,'parashuram k','parashuramk237@gmail.com','pbkdf2:sha256:260000$8abHXxWU$504119e0b569ca3301536427beb7a00b8a06939c6254ea2cdbce03774e6cf574');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 --
@@ -256,4 +273,4 @@ INSERT INTO `users` VALUES (6,'prajwal k','kulkarniprajwal.01@gmail.com','e99a18
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-08 11:25:29
+-- Dump completed on 2022-02-21 23:35:48
