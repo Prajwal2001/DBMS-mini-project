@@ -34,7 +34,7 @@ def create_database():
                 user_id int NOT NULL AUTO_INCREMENT,
                 user_name varchar(25) NOT NULL UNIQUE,
                 email varchar(30) NOT NULL UNIQUE,
-                password varchar(50) DEFAULT NULL,
+                password varchar(150) DEFAULT NULL,
                 PRIMARY KEY (user_id)
         )""")
 
@@ -44,10 +44,7 @@ def create_database():
                 PRIMARY KEY (train_no)
         )""")
 
-        cursor.execute("""SELECT * 
-                FROM trains""")
-        if not cursor.fetchall():
-            cursor.execute(
+        cursor.execute(
                 "INSERT INTO trains VALUES(1000, 'A-train'), (1002, 'C-train'), (1003, 'B-train')")
 
         cursor.execute("""CREATE TABLE IF NOT EXISTS stations (
@@ -57,11 +54,7 @@ def create_database():
                 PRIMARY KEY (stat_id)
         )""")
 
-        cursor.execute("""SELECT *
-                FROM stations""")
-
-        if not cursor.fetchall():
-            cursor.execute(
+        cursor.execute(
                 "INSERT INTO stations VALUES (200,'A','A'),(201,'B','B'),(202,'C','C'),(203,'D','D'),(204,'E','E'),(205,'F','F'),(206,'G','G'),(207,'H','H'),(208,'I','I')")
 
         cursor.execute("""CREATE TABLE IF NOT EXISTS covers (
@@ -74,11 +67,7 @@ def create_database():
                 FOREIGN KEY (stat_id) REFERENCES stations (stat_id) ON DELETE CASCADE,
                 FOREIGN KEY (train_no) REFERENCES trains (train_no) ON DELETE CASCADE
         )""")
-
-        cursor.execute("""SELECT *
-                FROM covers""")
-        if not cursor.fetchall():
-            cursor.execute("INSERT INTO `covers` VALUES (200,1000,'00:30:00','00:31:00',0,1),(201,1000,'01:00:00','01:01:00',0,2),(202,1000,'02:00:00','02:01:00',0,3),(203,1000,'03:00:00','03:01:00',0,4),(204,1000,'04:00:00','04:01:00',0,5),(205,1000,'05:00:00','05:01:00',0,6),(206,1000,'06:00:00','06:01:00',0,7),(208,1002,'08:00:00','08:01:00',0,1),(206,1002,'09:00:00','09:01:00',0,2),(205,1002,'10:00:00','10:01:00',0,3),(203,1002,'11:00:00','11:01:00',0,4),(202,1002,'12:00:00','12:01:00',0,5),(201,1002,'13:00:00','13:01:00',0,6),(200,1002,'14:00:00','14:01:00',0,7),(200,1003,'20:00:00','20:01:00',0,1),(201,1003,'21:00:00','21:01:00',0,2),(202,1003,'22:00:00','22:01:00',0,3),(203,1003,'23:00:00','23:01:00',0,4),(204,1003,'00:00:00','00:01:00',1,5),(205,1003,'01:00:00','01:01:00',1,6),(206,1003,'02:00:00','02:01:00',1,7)")
+        cursor.execute("INSERT INTO `covers` VALUES (200,1000,'00:30:00','00:31:00',0,1),(201,1000,'01:00:00','01:01:00',0,2),(202,1000,'02:00:00','02:01:00',0,3),(203,1000,'03:00:00','03:01:00',0,4),(204,1000,'04:00:00','04:01:00',0,5),(205,1000,'05:00:00','05:01:00',0,6),(206,1000,'06:00:00','06:01:00',0,7),(208,1002,'08:00:00','08:01:00',0,1),(206,1002,'09:00:00','09:01:00',0,2),(205,1002,'10:00:00','10:01:00',0,3),(203,1002,'11:00:00','11:01:00',0,4),(202,1002,'12:00:00','12:01:00',0,5),(201,1002,'13:00:00','13:01:00',0,6),(200,1002,'14:00:00','14:01:00',0,7),(200,1003,'20:00:00','20:01:00',0,1),(201,1003,'21:00:00','21:01:00',0,2),(202,1003,'22:00:00','22:01:00',0,3),(203,1003,'23:00:00','23:01:00',0,4),(204,1003,'00:00:00','00:01:00',1,5),(205,1003,'01:00:00','01:01:00',1,6),(206,1003,'02:00:00','02:01:00',1,7)")
 
         cursor.execute("""CREATE TABLE IF NOT EXISTS tickets (
                 pnr int NOT NULL AUTO_INCREMENT,
@@ -168,7 +157,7 @@ def create_database():
 
         cursor.execute("""CREATE PROCEDURE trains_info ()
                 BEGIN
-                SELECT train_no, train_name, stat_name, arrival_time, depart_time
+                SELECT train_no, stat_name, arrival_time, depart_time
                 FROM all_train_info
                 ORDER BY train_no, seq_no;
                 END""")
