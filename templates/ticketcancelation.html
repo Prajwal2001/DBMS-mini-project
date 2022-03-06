@@ -7,7 +7,95 @@
 <!-- Body -->
 
 <div class="container container-scrollable">
-
+    <div class="card text-center">
+        <div class="card-header row">
+            <div class="col-md-4">
+                <h3>From: {{ ticket.from_station }}</h3>
+            </div>
+            <div class="col-md-4">
+                <h2><i class="fas fa-arrow-right"></i></h2>
+                <h2><i class="fas fa-arrow-down"></i></h2>
+            </div>
+            <div class="col-md-4">
+                <h3>To: {{ ticket.to_station }}</h3>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>PNR: {{ ticket.pnr }}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Train No: {{ ticket.train_no }}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Train Name: {{ ticket.train_name }}</h5>
+                </div>
+            </div>
+            <!--<div class="row">
+                <div class="col-md-12">
+                    <h5>Arrival Time: {{ ticket.arrival_time }}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Departure Time: {{ ticket.depart_time }}</h5>
+                </div>
+                <div class="col-md-6">
+                    <h5>Departure Date: {{ ticket.travelling_date }}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Reaching Time: {{ ticket.reaching_time }}</h5>
+                </div>
+                <div class="col-md-6">
+                    <h5>Reaching Date: {{ ticket.reaching_date }}</h5>
+                </div>
+            </div> -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>Price: ₹{{ ticket.price }}</h5>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Passenger Name</th>
+                        <th>Passenger Age</th>
+                        <th>Seat No</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for passenger in ticket.passengers %}
+                    <tr>
+                        <td>{{ passenger[0] }}</td>
+                        <td>{{ passenger[1] }}</td>
+                        <td>{{ passenger[2] }}</td>
+                        <td><a class="btn btn-sm btn-primary" href="/home/cancelpassenger/{{ passenger[3] }}">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <a href="/home/cancelticket/{{ ticket.pnr }}" class="btn btn-primary cancelticket">Cancel</a>
+                </div>
+            </div> -->
+        </div>
+        <div class="card-footer text-muted">
+            <h5>Booking Date: {{ ticket.booking_date }}</h5>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

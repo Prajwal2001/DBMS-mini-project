@@ -118,7 +118,14 @@ def reserveticket():
 
 @app.route("/home/cancelticket/<int:pnr>")
 def cancelticket(pnr):
+    session["pnr"] = pnr
     return render_template("ticketcancelation.html", ticket=db.get_ticket(pnr))
+
+
+@app.route("/home/cancelpassenger/<int:p_id>")
+def cancelpassenger(p_id):
+    db.delete_passenger(p_id, session.get("pnr"))
+    return redirect(f"/home/cancelticket/{ session.get('pnr') }")
 
 
 @app.route('/home/payment', methods=['GET', 'POST'])
