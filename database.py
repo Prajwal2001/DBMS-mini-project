@@ -280,9 +280,34 @@ class Database:
         sleep(1)
         ticket_mail(userData[0][2], userData[0][1], fileName, pnr)
 
-    def cancel_ticket(self, pnr: int):
-        """Cancels the ticket for given PNR"""
-        self.__cursor.execute(f"""DELETE FROM tickets WHERE pnr = {pnr}""")
+    # def cancel_ticket(self, pnr: int):
+    #     """Cancels the ticket for given PNR"""
+    #     self.__cursor.execute(f"""DELETE FROM tickets WHERE pnr = {pnr}""")
+
+    def get_ticket(self, pnr: int):
+        self.__cursor.callproc("get_tickets", pnr)
+        for res in self.__cursor.stored_results():
+            ticket = res.fetchall()
+
+        self.__cursor.callproc("get_passengers", pnr)
+        for res in self.__cursor.stored_results():
+            passengers = res.fetchall()
+
+        return {
+            "pnr": ticket[0][0],
+            "travelling_date": self.convert_date_format(ticket[0][1]),
+            "train_no": ticket[0][2],
+            "train_name": ticket[0][3],
+            "from_station": ticket[0][4],
+            "to_station": ticket[0][5],
+            "passengers": [[passenger[1], passenger[2], passenger[3]] for passenger in passengers if passenger[0] == ticket[0][0]],
+            "booking_date": self.convert_date_format(ticket[0][6]),
+            "arrival_time": self.convert_time_format(sourceTiming[0][0]),
+            "depart_time": self.convert_time_format(sourceTiming[0][1]),
+            "reaching_time": self.convert_time_format(destinationTiming[0][0]),
+            "reaching_date": self.calculate_reaching_date(destinationTiming[0][1], self.convert_date_format(ticket[0][1])),
+            "price": ticket[0][7]
+        }
 
     def get_totalprice(self, passenger_details: dict):
         """Returns total price for a ticket"""

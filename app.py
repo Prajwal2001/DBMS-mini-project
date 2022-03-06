@@ -111,10 +111,14 @@ def reserveticket():
     return redirect("/login")
 
 
-@app.route('/home/cancelticket/<int:pnr>')
+# @app.route('/home/cancelticket/<int:pnr>')
+# def cancelticket(pnr):
+#     db.cancel_ticket(pnr)
+#     return redirect('/home/viewtickets')
+
+@app.route("/home/cancelticket/<int:pnr>")
 def cancelticket(pnr):
-    db.cancel_ticket(pnr)
-    return redirect('/home/viewtickets')
+    return render_template("ticketcancelation.html", ticket=db.get_ticket(pnr))
 
 
 @app.route('/home/payment', methods=['GET', 'POST'])
