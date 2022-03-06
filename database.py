@@ -312,10 +312,19 @@ class Database:
         """)
 
         self.__cursor.execute(f"""
-        SELECT COUNT(*) 
+        SELECT *
         FROM passengers
         WHERE pnr = {pnr}
         """)
+
+        pssgrs = self.__cursor.fetchall()
+
+        if not pssgrs:
+            self.__cursor.execute(f"""
+            DELETE FROM tickets WHERE pnr = {pnr}
+            """)
+
+        return pssgrs
 
     def get_totalprice(self, passenger_details: dict):
         """Returns total price for a ticket"""

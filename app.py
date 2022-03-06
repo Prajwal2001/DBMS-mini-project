@@ -124,8 +124,7 @@ def cancelticket(pnr):
 
 @app.route("/home/cancelpassenger/<int:p_id>")
 def cancelpassenger(p_id):
-    db.delete_passenger(p_id, session.get("pnr"))
-    return redirect(f"/home/cancelticket/{ session.get('pnr') }")
+    return redirect(f"/home/cancelticket/{ session.get('pnr') }") if db.delete_passenger(p_id, session.get("pnr")) else redirect("/home/viewtickets")
 
 
 @app.route('/home/payment', methods=['GET', 'POST'])
