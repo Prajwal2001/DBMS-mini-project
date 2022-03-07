@@ -39,14 +39,19 @@ def signup():
         return render_template("signup.html", status=True)
 
 
+@app.context_processor
+def general_data():
+    return dict(user_name=session.get("user_name"))
+
+
 @app.route("/home")
 def home():
-    return render_template("home.html", user_name=session["user_name"]) if session.get("user_id") else redirect('/login', code=302)
+    return render_template("home.html") if session.get("user_id") else redirect('/login', code=302)
 
 
 @app.route("/home/viewtickets")
 def viewtickets():
-    return render_template("tickets.html", tickets=db.get_tickets(session.get("user_id")), user_name=session["user_name"]) if session.get("user_id") else redirect('/login')
+    return render_template("tickets.html", tickets=db.get_tickets(session.get("user_id"))) if session.get("user_id") else redirect('/login')
 
 
 @app.route("/home/booktickets", methods=["GET", "POST"])
@@ -61,20 +66,20 @@ def booktickets():
         today = date.today()
         min = "%d-%.2d-%.2d" % (today.year, today.month, today.day)
         max = "%d-%.2d-%.2d" % (today.year + 1, today.month, today.day)
-        return render_template("booktickets.html", stations=db.get_stations(), min_date=min, max_date=max, user_name=session["user_name"])
+        return render_template("booktickets.html", stations=db.get_stations(), min_date=min, max_date=max)
     return redirect('/login')
 
 
 @app.route('/home/getalltrainsinfo')
 def get_all_trains_info():
-    return render_template("trainsinfo.html", trainsinfo=db.get_train_details(), user_name=session["user_name"]) if session.get("user_id") else redirect("/login")
+    return render_template("trainsinfo.html", trainsinfo=db.get_train_details()) if session.get("user_id") else redirect("/login")
 
 
 @app.route("/home/trains")
 def trains():
     global passengerDetails
     if session.get("user_id"):
-        return render_template("trains.html", trains=db.get_trains(passengerDetails), user_name=session['user_name'])
+        return render_template("trains.html", trains=db.get_trains(passengerDetails))
     return redirect('/login')
 
 
@@ -98,7 +103,7 @@ def addpassengers():
                 'p_name': name,
                 'p_age': age
             })
-        return render_template("addpassengers.html", passengers=passengerDetails['passengers'], user_name=session["user_name"], noOfpassg=len(passengerDetails['passengers']))
+        return render_template("addpassengers.html", passengers=passengerDetails['passengers'], noOfpassg=len(passengerDetails['passengers']))
     return redirect("/login")
 
 
@@ -128,7 +133,7 @@ def payment():
     if session.get("user_id"):
         if request.method == 'POST':
             return redirect('/home/reserveticket')
-        return render_template("payment.html", amount=db.get_totalprice(passengerDetails), user_name=session["user_name"])
+        return render_template("payment.html", amount=db.get_totalprice(passengerDetails))
     return redirect("/login")
 
 

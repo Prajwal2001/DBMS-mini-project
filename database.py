@@ -302,6 +302,7 @@ class Database:
         }
 
     def delete_passenger(self, p_id: int, pnr: int):
+        """Deletes given passenger's p_id and return a list of passengers for givn PNR"""
 
         self.__cursor.execute(f"""
         DELETE FROM passengers WHERE p_id = {p_id};
