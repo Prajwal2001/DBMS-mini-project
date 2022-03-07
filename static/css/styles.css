@@ -108,6 +108,10 @@
   animation: fadeIn 1s;
 }
 
+.modal-backdrop {
+  z-index: 0;
+}
+
 /* Add animation (fade in the popup) */
 @-webkit-keyframes fadeIn {
   from {

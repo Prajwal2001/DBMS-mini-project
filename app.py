@@ -111,11 +111,6 @@ def reserveticket():
     return redirect("/login")
 
 
-# @app.route('/home/cancelticket/<int:pnr>')
-# def cancelticket(pnr):
-#     db.cancel_ticket(pnr)
-#     return redirect('/home/viewtickets')
-
 @app.route("/home/cancelticket/<int:pnr>")
 def cancelticket(pnr):
     session["pnr"] = pnr

@@ -280,10 +280,6 @@ class Database:
         sleep(1)
         ticket_mail(userData[0][2], userData[0][1], fileName, pnr)
 
-    # def cancel_ticket(self, pnr: int):
-    #     """Cancels the ticket for given PNR"""
-    #     self.__cursor.execute(f"""DELETE FROM tickets WHERE pnr = {pnr}""")
-
     def get_ticket(self, pnr: int):
         self.__cursor.callproc("get_tickets", [pnr])
         for res in self.__cursor.stored_results():
