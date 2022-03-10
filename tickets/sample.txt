@@ -1,1 +1,1 @@
-This directory contains all the tickets in pdf format
+This is the folder where all tickets will be saved.

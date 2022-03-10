@@ -6,6 +6,7 @@ from ticket_pdf_generator import generate_ticket_pdf
 from time import sleep
 from database_creator import create_database
 from werkzeug.security import check_password_hash, generate_password_hash
+from delete_tickets import delete_tickets
 
 
 class Database:
@@ -282,6 +283,7 @@ class Database:
         fileName = generate_ticket_pdf(ticket)
         sleep(1)
         ticket_mail(userData[0][2], userData[0][1], fileName, pnr)
+        delete_tickets()
 
     def get_ticket(self, pnr: int):
         self.__cursor.callproc("get_tickets", [pnr])
