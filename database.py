@@ -32,6 +32,8 @@ class Database:
         self.__exe = self.__cursor.execute
         self.__fetch = self.__cursor.fetchall
 
+        self.passengerDetails = {}
+
     def add_user(self, user: dict):
         """Adds a user_id to the database, by accepting a list consisting of username, password and email.
         And returns the updated table values in a list of key value pairs"""

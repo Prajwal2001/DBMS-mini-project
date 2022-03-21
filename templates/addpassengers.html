@@ -39,8 +39,30 @@
         <h6>Maximum of 6 passengers can be added per ticket!</h6>
         {% endif %}
     </form>
-    {% if passengers %}
+    {% if noOfpassg %}
     <a href="/home/payment" class="btn btn-primary" style="margin-top: 10px;">Done</a>
+    <br>
+    <br>
+    <table class="table addpassengers">
+        <tr>
+            <th>Sl.no</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th></th>
+        </tr>
+        {% for i, passenger in passengers %}
+        <tr>
+            <td>{{ i }}</td>
+            <td>{{ passenger.p_name }}</td>
+            <td>{{ passenger.p_age }}</td>
+            <td><a href="/home/removepassenger/{{ i }}" class="btn btn-primary btn-sm"><i class="fa fa-trash-o"
+                        aria-hidden="true"></i></a>
+                <a href="/home/editpassenger/{{ i }}" class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"
+                        aria-hidden="true"></i></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
     {% endif %}
 </div>
 {% endblock %}
