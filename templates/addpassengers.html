@@ -44,24 +44,52 @@
     <br>
     <br>
     <table class="table addpassengers">
-        <tr>
-            <th>Sl.no</th>
-            <th>Name</th>
-            <th>Age</th>
-            <th></th>
-        </tr>
-        {% for i, passenger in passengers %}
-        <tr>
-            <td>{{ i }}</td>
-            <td>{{ passenger.p_name }}</td>
-            <td>{{ passenger.p_age }}</td>
-            <td><a href="/home/removepassenger/{{ i }}" class="btn btn-primary btn-sm"><i class="fa fa-trash-o"
-                        aria-hidden="true"></i></a>
-                <a href="/home/editpassenger/{{ i }}" class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"
-                        aria-hidden="true"></i></a>
-            </td>
-        </tr>
-        {% endfor %}
+        <thead>
+            <tr>
+                <th>Sl.no</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i, passenger in passengers %}
+            <tr>
+                <td>{{ i }}</td>
+                <td>{{ passenger.p_name }}</td>
+                <td>{{ passenger.p_age }}</td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal-{{ i }}">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    </button>
+                    <div class="modal fade" id="exampleModal-{{ i }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Delete Confirmation
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete passenger {{ passenger.p_name }}?
+                                </div>
+                                <div class="modal-footer">
+                                    <a class="btn btn-primary" href="/home/removepassenger/{{ i }}">Delete</a>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/home/editpassenger/{{ i }}" class="btn btn-success btn-sm"><i
+                            class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
     {% endif %}
 </div>

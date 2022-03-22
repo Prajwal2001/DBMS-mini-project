@@ -110,6 +110,16 @@ def removepassenger(id):
     return redirect("/home/addpassengers")
 
 
+@app.route("/home/editpassenger/<int:id>", methods=["GET", "POST"])
+def editpassenger(id):
+    passenger = db.passengerDetails['passengers'][id - 1]
+    if request.method == "POST":
+        passenger["p_name"] = request.form.get('p_name')
+        passenger["p_age"] = request.form.get('p_age')
+        return redirect("/home/addpassengers")
+    return render_template("editpassenger.html", passenger=passenger, id=id)
+
+
 @app.route("/home/reserveticket")
 def reserveticket():
     if session.get("user_id"):
