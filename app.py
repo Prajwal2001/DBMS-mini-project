@@ -23,10 +23,8 @@ def login():
                 request.form.get('username'))
             session["user_name"] = request.form.get('username').title()
             return redirect('/home')
-        else:
-            return render_template("index.html", status=False)
-    else:
-        return render_template("index.html", status=True)
+        return render_template("index.html", status=False)
+    return render_template("index.html", status=True)
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -34,8 +32,7 @@ def signup():
     if request.method == 'POST':
         response = db.add_user(request.form)
         return redirect('/login', code=302) if response else render_template("signup.html", status=response)
-    else:
-        return render_template("signup.html", status=True)
+    return render_template("signup.html", status=True)
 
 
 @app.context_processor
@@ -135,8 +132,8 @@ def cancelticket(pnr):
 
 
 @app.route("/home/cancelpassenger/<int:p_id>")
-def cancelpassenger(p_id):
-    return redirect(f"/home/cancelticket/{ session.get('pnr') }") if db.delete_passenger(p_id, session.get("pnr")) else redirect("/home/viewtickets")
+def cancelpassenger(pId):
+    return redirect(f"/home/cancelticket/{ session.get('pnr') }") if db.delete_passenger(pId, session.get("pnr")) else redirect("/home/viewtickets")
 
 
 @app.route('/home/payment', methods=['GET', 'POST'])
