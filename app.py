@@ -131,7 +131,7 @@ def cancelticket(pnr):
     return render_template("ticketcancelation.html", ticket=db.get_ticket(pnr))
 
 
-@app.route("/home/cancelpassenger/<int:p_id>")
+@app.route("/home/cancelpassenger/<int:pId>")
 def cancelpassenger(pId):
     return redirect(f"/home/cancelticket/{ session.get('pnr') }") if db.delete_passenger(pId, session.get("pnr")) else redirect("/home/viewtickets")
 
